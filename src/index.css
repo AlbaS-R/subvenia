@@ -1,0 +1,198 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap');
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-poppins: "Sora", sans-serif;
+  
+  --color-brand-blue: #3b82f6;
+  --color-brand-emerald: #00df81;
+  --color-surface: #101415;
+  --color-background: #101415;
+  --color-on-background: #ffffff;
+  --color-on-surface: #ffffff;
+  --color-on-surface-variant: #e1e6ef;
+  --color-primary: #c9d6ee;
+  --color-on-primary: #21314a;
+  --color-secondary: #44edcc;
+  --color-on-secondary: #00382e;
+  /* Texto secundario sobre fondos oscuros: menta muy suave, lee bien y enlaza con la marca */
+  --color-body-soft: #bfe9df;
+  --color-surface-container-lowest: #0b0f10;
+  --color-surface-container-low: #191c1e;
+  --color-surface-container: #1d2022;
+  --color-surface-container-high: #272a2c;
+  --color-surface-container-highest: #323537;
+  --color-outline: #8f9098;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+body {
+  font-family: "Inter", ui-sans-serif, system-ui, sans-serif;
+  background-color: #101415;
+  color: #ffffff;
+  overflow-x: hidden;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+@utility mesh-gradient {
+  background-color: #101415;
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(0, 209, 178, 0.14) 0, transparent 52%),
+    radial-gradient(at 100% 100%, rgba(41, 121, 255, 0.14) 0, transparent 52%),
+    radial-gradient(at 50% 45%, rgba(10, 27, 51, 0.95) 0, rgba(16, 20, 21, 0.9) 55%, rgba(16, 20, 21, 1) 100%);
+}
+
+@utility mesh-gradient-dark {
+  background-image: 
+    radial-gradient(at 0% 0%, rgba(0, 209, 178, 0.2) 0, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(41, 121, 255, 0.2) 0, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(10, 27, 51, 1) 0, transparent 100%);
+}
+
+@utility glass {
+  background: rgba(10, 27, 51, 0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.35);
+}
+
+@utility glass-brand {
+  background: rgba(10, 27, 51, 0.6);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+  @variant dark {
+    background: rgba(15, 23, 42, 0.3);
+    border: 1px solid rgba(0, 223, 129, 0.2);
+    box-shadow: 0 0 20px rgba(0, 223, 129, 0.05);
+  }
+}
+
+@keyframes mesh-float {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(0, -2%, 0) scale(1.03);
+  }
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes mesh-drift {
+  0% {
+    transform: translate3d(-2%, -1%, 0);
+  }
+  50% {
+    transform: translate3d(2%, 1%, 0);
+  }
+  100% {
+    transform: translate3d(-2%, -1%, 0);
+  }
+}
+
+.site-mesh-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  pointer-events: none;
+  background-color: #101415;
+  background-image:
+    radial-gradient(at 0% 0%, rgba(0, 209, 178, 0.16) 0, transparent 56%),
+    radial-gradient(at 100% 100%, rgba(41, 121, 255, 0.16) 0, transparent 56%),
+    radial-gradient(at 50% 45%, rgba(10, 27, 51, 0.98) 0, rgba(16, 20, 21, 0.92) 58%, rgba(16, 20, 21, 1) 100%);
+  animation: mesh-float 18s ease-in-out infinite;
+}
+
+.site-mesh-bg::before {
+  content: "";
+  position: absolute;
+  inset: -20%;
+  background:
+    radial-gradient(circle at 18% 24%, rgba(68, 237, 204, 0.13), transparent 38%),
+    radial-gradient(circle at 78% 72%, rgba(59, 130, 246, 0.12), transparent 36%);
+  filter: blur(42px);
+  animation: mesh-drift 22s ease-in-out infinite;
+}
+
+@utility brand-border {
+  border: 1px solid rgba(183, 199, 231, 0.2);
+  @variant dark {
+    border: 1px solid rgba(68, 237, 204, 0.35);
+    box-shadow: 0 0 20px rgba(68, 237, 204, 0.16);
+  }
+}
+
+@utility bg-grid-brand {
+  background-image: radial-gradient(rgba(59, 130, 246, 0.1) 1px, transparent 1px);
+  background-size: 40px 40px;
+  @variant dark {
+    background-image: radial-gradient(rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+  }
+}
+
+@utility text-gradient-brand {
+  background-image: linear-gradient(to right, #2563eb, #059669);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+  @variant dark {
+    background-image: linear-gradient(to right, #3b82f6, #00df81);
+  }
+}
+
+@keyframes pulse-brand {
+  0%, 100% { opacity: 0.2; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.05); }
+}
+
+@utility animate-pulse-brand {
+  animation: pulse-brand 4s ease-in-out infinite;
+}
+
+.river-line {
+  background: linear-gradient(180deg, transparent 0%, #d27d5e 15%, #d27d5e 85%, transparent 100%);
+  width: 2px;
+  filter: blur(0.5px);
+}
+
+.liquid-blob {
+  border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+  background: linear-gradient(45deg, #d27d5e, #924a2f);
+}
+
+.glass-card {
+  background: rgba(10, 27, 51, 0.72);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+}
+
+.material-symbols-outlined {
+  font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+}
+
+/* Efecto glassify global para contenedores visuales */
+main div[class*="rounded-"]:not([class*="bg-secondary"]),
+main article[class*="rounded-"]:not([class*="bg-secondary"]) {
+  background: rgba(10, 27, 51, 0.42);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 32px rgba(0, 0, 0, 0.35);
+}
+
