@@ -351,9 +351,9 @@ export function HomePage() {
             <p className="font-sans text-xs uppercase tracking-widest text-slate-400">© 2024 Subvenia. Executive Grant Automation.</p>
           </div>
           <div className="flex gap-8">
-            <a className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" href="#">Privacidad</a>
-            <a className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" href="#">Términos</a>
-            <a className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" href="#">Seguridad</a>
+            <NavLink className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" to="/privacidad">Privacidad</NavLink>
+            <NavLink className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" to="/terminos">Términos</NavLink>
+            <NavLink className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" to="/seguridad">Seguridad</NavLink>
             <NavLink className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" to="/contacto">Contacto</NavLink>
           </div>
         </div>
@@ -440,9 +440,9 @@ export function ContactPage() {
             <p className="font-sans text-xs uppercase tracking-widest text-slate-400">© 2024 Subvenia. Executive Grant Automation.</p>
           </div>
           <div className="flex gap-8">
-            <a className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" href="#">Privacidad</a>
-            <a className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" href="#">Términos</a>
-            <a className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" href="#">Seguridad</a>
+            <NavLink className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" to="/privacidad">Privacidad</NavLink>
+            <NavLink className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" to="/terminos">Términos</NavLink>
+            <NavLink className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" to="/seguridad">Seguridad</NavLink>
             <NavLink className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" to="/contacto">Contacto</NavLink>
           </div>
         </div>
@@ -541,9 +541,9 @@ export function MethodologyPage() {
             <p className="font-sans text-xs uppercase tracking-widest text-slate-400">© 2024 Subvenia. Executive Grant Automation.</p>
           </div>
           <div className="flex gap-8">
-            <a className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" href="#">Privacidad</a>
-            <a className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" href="#">Términos</a>
-            <a className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" href="#">Seguridad</a>
+            <NavLink className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" to="/privacidad">Privacidad</NavLink>
+            <NavLink className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" to="/terminos">Términos</NavLink>
+            <NavLink className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" to="/seguridad">Seguridad</NavLink>
             <NavLink className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" to="/contacto">Contacto</NavLink>
           </div>
         </div>
@@ -716,9 +716,9 @@ export function CasosDeUsoPage() {
             <p className="font-sans text-xs uppercase tracking-widest text-slate-400">© 2024 Subvenia. Executive Grant Automation.</p>
           </div>
           <div className="flex gap-8">
-            <a className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" href="#">Privacidad</a>
-            <a className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" href="#">Términos</a>
-            <a className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" href="#">Seguridad</a>
+            <NavLink className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" to="/privacidad">Privacidad</NavLink>
+            <NavLink className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" to="/terminos">Términos</NavLink>
+            <NavLink className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" to="/seguridad">Seguridad</NavLink>
             <NavLink className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" to="/contacto">Contacto</NavLink>
           </div>
         </div>
@@ -852,14 +852,162 @@ export function PricingPage() {
             <p className="font-sans text-xs uppercase tracking-widest text-slate-400">© 2024 Subvenia. Executive Grant Automation.</p>
           </div>
           <div className="flex gap-8">
-            <a className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" href="#">Privacidad</a>
-            <a className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" href="#">Términos</a>
-            <a className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" href="#">Seguridad</a>
+            <NavLink className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" to="/privacidad">Privacidad</NavLink>
+            <NavLink className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" to="/terminos">Términos</NavLink>
+            <NavLink className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" to="/seguridad">Seguridad</NavLink>
             <NavLink className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" to="/contacto">Contacto</NavLink>
           </div>
         </div>
       </footer>
     </>
+  );
+}
+
+type LegalSection = {
+  title: string;
+  paragraphs: string[];
+};
+
+function LegalPageTemplate({
+  eyebrow,
+  title,
+  intro,
+  updatedAt,
+  sections,
+}: {
+  eyebrow: string;
+  title: string;
+  intro: string;
+  updatedAt: string;
+  sections: LegalSection[];
+}) {
+  return (
+    <>
+      <section className="relative overflow-hidden px-4 pt-32 pb-16 md:px-8 md:pt-40 md:pb-24">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(68,237,204,0.1),transparent_40%)]"></div>
+        <div className="relative mx-auto max-w-4xl">
+          <span className="font-label-caps mb-4 block text-secondary">{eyebrow}</span>
+          <h1 className="font-h1 mb-6 text-4xl leading-tight text-white md:text-h1">{title}</h1>
+          <p className="font-body-lg mb-4 text-body-soft">{intro}</p>
+          <p className="text-sm text-slate-400">Actualizado: {updatedAt}</p>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-4xl space-y-6 px-4 pb-24 md:px-8">
+        {sections.map((section) => (
+          <article key={section.title} className="glass-card rounded-3xl border border-white/10 p-7 md:p-8">
+            <h2 className="mb-4 text-2xl font-semibold text-white">{section.title}</h2>
+            <div className="space-y-3 text-body-soft">
+              {section.paragraphs.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
+              ))}
+            </div>
+          </article>
+        ))}
+      </section>
+    </>
+  );
+}
+
+export function PrivacyPage() {
+  return (
+    <LegalPageTemplate
+      eyebrow="PRIVACIDAD"
+      intro="En esta página explicamos cómo recopilamos, utilizamos y protegemos la información personal cuando utilizas los servicios de Subvenia."
+      sections={[
+        {
+          title: 'Datos que recopilamos',
+          paragraphs: [
+            'Recopilamos datos de contacto y de uso necesarios para prestar el servicio, como nombre, correo profesional y actividad dentro de la plataforma.',
+            'Solo solicitamos la información estrictamente necesaria para automatizar procesos de subvenciones y ofrecer soporte técnico.',
+          ],
+        },
+        {
+          title: 'Uso de la información',
+          paragraphs: [
+            'Utilizamos los datos para operar la plataforma, mejorar funcionalidades, responder solicitudes y comunicar actualizaciones relevantes del servicio.',
+            'No vendemos tus datos personales a terceros.',
+          ],
+        },
+        {
+          title: 'Conservación y derechos',
+          paragraphs: [
+            'Conservamos la información durante el tiempo necesario para cumplir obligaciones contractuales y legales aplicables.',
+            'Puedes solicitar acceso, rectificación, supresión o limitación del tratamiento escribiendo a contacto@subvenia.ai.',
+          ],
+        },
+      ]}
+      title="Política de Privacidad"
+      updatedAt="06/05/2026"
+    />
+  );
+}
+
+export function TermsPage() {
+  return (
+    <LegalPageTemplate
+      eyebrow="TÉRMINOS"
+      intro="Estos términos regulan el acceso y uso de Subvenia. Al utilizar la plataforma aceptas estas condiciones de servicio."
+      sections={[
+        {
+          title: 'Uso permitido',
+          paragraphs: [
+            'El servicio debe utilizarse exclusivamente para fines profesionales y de conformidad con la normativa aplicable.',
+            'No está permitido usar la plataforma para actividades ilícitas, fraudulentas o que comprometan su seguridad o disponibilidad.',
+          ],
+        },
+        {
+          title: 'Responsabilidades',
+          paragraphs: [
+            'El cliente es responsable de la veracidad de la información suministrada y de la gestión de credenciales de acceso de su equipo.',
+            'Subvenia se compromete a prestar el servicio con diligencia profesional y medidas de continuidad operativa razonables.',
+          ],
+        },
+        {
+          title: 'Propiedad intelectual y cambios',
+          paragraphs: [
+            'La tecnología, diseño y contenido de la plataforma son titularidad de Subvenia o de sus licenciantes.',
+            'Podemos actualizar estos términos cuando sea necesario; notificaremos cambios relevantes por medios habituales de comunicación.',
+          ],
+        },
+      ]}
+      title="Términos y Condiciones"
+      updatedAt="06/05/2026"
+    />
+  );
+}
+
+export function SecurityPage() {
+  return (
+    <LegalPageTemplate
+      eyebrow="SEGURIDAD"
+      intro="La seguridad de la información es prioritaria para Subvenia. Aplicamos controles técnicos y organizativos para proteger datos y operaciones."
+      sections={[
+        {
+          title: 'Controles técnicos',
+          paragraphs: [
+            'Aplicamos cifrado en tránsito y en reposo, control de accesos con mínimo privilegio y monitorización de actividad relevante.',
+            'Realizamos revisiones periódicas para detectar vulnerabilidades y reforzar nuestra postura de seguridad.',
+          ],
+        },
+        {
+          title: 'Operación y continuidad',
+          paragraphs: [
+            'Contamos con procedimientos de respaldo y recuperación para minimizar impacto ante incidentes técnicos.',
+            'Mantenemos trazabilidad de eventos críticos para facilitar auditoría y análisis de incidentes.',
+          ],
+        },
+        {
+          title: 'Reporte de incidentes',
+          paragraphs: [
+            'Si detectas una vulnerabilidad o incidente, puedes reportarlo a contacto@subvenia.ai indicando el máximo detalle posible.',
+            'Nuestro equipo analiza cada reporte y prioriza las acciones correctivas según impacto y urgencia.',
+          ],
+        },
+      ]}
+      title="Política de Seguridad"
+      updatedAt="06/05/2026"
+    />
   );
 }
 

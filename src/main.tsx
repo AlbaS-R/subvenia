@@ -1,7 +1,7 @@
 import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom';
-import App, {CasosDeUsoPage, ContactPage, HomePage, MethodologyPage, PricingPage} from './App.tsx';
+import App, {CasosDeUsoPage, ContactPage, HomePage, MethodologyPage, PricingPage, PrivacyPage, SecurityPage, TermsPage} from './App.tsx';
 import './index.css';
 
 createRoot(document.getElementById('root')!).render(
@@ -14,6 +14,9 @@ createRoot(document.getElementById('root')!).render(
           <Route element={<CasosDeUsoPage />} path="casos-de-uso" />
           <Route element={<ContactPage />} path="contacto" />
           <Route element={<PricingPage />} path="precios" />
+          <Route element={<PrivacyPage />} path="privacidad" />
+          <Route element={<TermsPage />} path="terminos" />
+          <Route element={<SecurityPage />} path="seguridad" />
           <Route element={<Navigate replace to="/" />} path="*" />
         </Route>
       </Routes>
