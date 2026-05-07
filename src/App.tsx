@@ -1,6 +1,66 @@
-﻿import {NavLink, Outlet} from 'react-router-dom';
+﻿import {useEffect, useRef, useState, type ChangeEvent, type FormEvent} from 'react';
+import {NavLink, Outlet, useLocation} from 'react-router-dom';
+import {sendContactEmail, validateEmailJsConfig} from './lib/email.ts';
+
+declare global {
+  interface Window {
+    dataLayer?: Array<Record<string, unknown>>;
+    gtag?: (...args: unknown[]) => void;
+  }
+}
+
+function trackEvent(eventName: string, params: Record<string, unknown> = {}) {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  const payload = {event: eventName, ...params};
+  window.dataLayer?.push(payload);
+
+  if (typeof window.gtag === 'function') {
+    window.gtag('event', eventName, params);
+  }
+}
 
 function Layout() {
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo({top: 0, left: 0, behavior: 'auto'});
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const elements = Array.from(document.querySelectorAll<HTMLElement>('[data-motion]'));
+    if (!elements.length) {
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) {
+            return;
+          }
+
+          const delay = Number(entry.target.getAttribute('data-motion-delay') ?? 0);
+          window.setTimeout(() => {
+            entry.target.classList.add('is-visible');
+          }, delay);
+
+          observer.unobserve(entry.target);
+        });
+      },
+      {threshold: 0.2, rootMargin: '0px 0px -8% 0px'},
+    );
+
+    elements.forEach((element) => {
+      element.classList.add('motion-reveal');
+      observer.observe(element);
+    });
+
+    return () => observer.disconnect();
+  }, [location.pathname]);
+
   return (
     <div className="font-body-md relative text-white selection:bg-emerald-300/30">
       <div aria-hidden className="site-mesh-bg"></div>
@@ -54,9 +114,10 @@ function Layout() {
         </div>
         <NavLink
           className="z-10 rounded-xl bg-[#57e8cd] px-3 py-1.5 text-xs font-semibold text-[#00382e] transition-transform active:scale-95 md:px-6 md:py-2 md:text-base md:font-medium"
+          onClick={() => trackEvent('cta_click', {cta_id: 'navbar_demo', location: 'navbar'})}
           to="/contacto"
         >
-          Solicitar demo
+          Solicitar demo estratégica
         </NavLink>
       </nav>
       <main className="relative z-10">
@@ -67,29 +128,65 @@ function Layout() {
 }
 
 export function HomePage() {
+  useEffect(() => {
+    const thresholds = [25, 50, 75, 100];
+    const reached = new Set<number>();
+
+    const onScroll = () => {
+      const doc = document.documentElement;
+      const maxScroll = doc.scrollHeight - window.innerHeight;
+      if (maxScroll <= 0) {
+        return;
+      }
+
+      const depth = Math.round((window.scrollY / maxScroll) * 100);
+      thresholds.forEach((threshold) => {
+        if (depth >= threshold && !reached.has(threshold)) {
+          reached.add(threshold);
+          trackEvent('scroll_depth', {depth_percent: threshold, page: 'home'});
+        }
+      });
+    };
+
+    window.addEventListener('scroll', onScroll, {passive: true});
+    onScroll();
+
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
   return (
     <>
       <section className="relative flex min-h-screen flex-col items-center justify-center px-4 pt-28 pb-16 text-center md:px-8 md:pt-40 md:pb-24">
         <div className="z-10 mx-auto w-full max-w-4xl">
-          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-[#44edcc]/20 bg-[#44edcc]/10 px-3 py-1 text-[#44edcc] md:mb-6">
+          <div className="motion-float-soft mb-4 inline-flex items-center gap-2 rounded-full border border-[#44edcc]/20 bg-[#44edcc]/10 px-3 py-1 text-[#44edcc] md:mb-6" data-motion data-motion-delay="20">
             <span className="material-symbols-outlined text-[18px]">verified</span>
             <span className="font-label-caps text-[10px] uppercase tracking-widest">Executive Grant Automation</span>
           </div>
-          <h1 className="font-h1 mb-5 text-4xl leading-[1.05] text-white md:mb-8 md:text-h1">
-            Convierte tu base de asociados en <span className="text-[#44edcc] italic">financiación real</span>
+          <h1 className="font-h1 mb-5 text-4xl leading-[1.05] text-white md:mb-8 md:text-h1" data-motion data-motion-delay="100">
+            Deja de perder convocatorias por procesos manuales y conviértelas en <span className="text-[#44edcc] italic">financiación real en días</span>
           </h1>
-          <p className="font-body-lg mx-auto mb-8 max-w-xl text-base leading-[1.5] text-body-soft md:mb-12 md:max-w-2xl md:text-body-lg">
-            Automatización de subvenciones de alto nivel diseñada para organizaciones que buscan maximizar su impacto económico sin la carga administrativa tradicional.
+          <p className="font-body-lg mx-auto mb-8 max-w-xl text-base leading-[1.5] text-body-soft md:mb-12 md:max-w-2xl md:text-body-lg" data-motion data-motion-delay="170">
+            Subvenia detecta oportunidades, prioriza asociados y prepara documentación en un flujo guiado para que tu equipo pase de reaccionar tarde a ejecutar con previsión.
           </p>
-          <div className="flex flex-col justify-center gap-3 sm:flex-row">
-            <button className="rounded-xl bg-[#44edcc] px-6 py-3 text-base font-bold text-[#00382e] transition-all hover:shadow-[0_0_20px_rgba(68,237,204,0.4)] md:px-8 md:py-4 md:text-lg">Empieza ahora</button>
-            <button className="glass-card flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-base font-bold text-white transition-all hover:border-[#44edcc]/40 md:px-8 md:py-4 md:text-lg">
-              <span className="material-symbols-outlined">play_circle</span> Ver demo
-            </button>
+          <div className="flex flex-col justify-center gap-3 sm:flex-row" data-motion data-motion-delay="240">
+            <NavLink
+              className="rounded-xl bg-[#44edcc] px-6 py-3 text-base font-bold text-[#00382e] transition-all hover:shadow-[0_0_20px_rgba(68,237,204,0.4)] md:px-8 md:py-4 md:text-lg"
+              onClick={() => trackEvent('cta_click', {cta_id: 'hero_primary', location: 'hero'})}
+              to="/contacto"
+            >
+              Solicitar demo estratégica
+            </NavLink>
+            <NavLink
+              className="glass-card flex items-center justify-center gap-2 rounded-xl px-6 py-3 text-base font-bold text-white transition-all hover:border-[#44edcc]/40 md:px-8 md:py-4 md:text-lg"
+              onClick={() => trackEvent('cta_click', {cta_id: 'hero_secondary', location: 'hero'})}
+              to="/metodologia"
+            >
+              <span className="material-symbols-outlined">play_circle</span> Ver cómo funciona
+            </NavLink>
           </div>
         </div>
 
-        <div className="group relative mx-auto mt-10 w-full max-w-5xl md:mt-20">
+        <div className="group relative mx-auto mt-10 w-full max-w-5xl md:mt-20 motion-float-soft" data-motion="scale" data-motion-delay="300">
           <div className="absolute -inset-4 bg-[#44edcc]/10 blur-3xl transition-all duration-700 group-hover:bg-[#44edcc]/20"></div>
           <div className="glass-card inner-glow overflow-hidden rounded-[32px] p-4">
             <div
@@ -191,13 +288,13 @@ export function HomePage() {
                 </g>
               </svg>
             </div>
-            <div className="glass-card absolute top-12 left-12 hidden flex-col gap-1 rounded-2xl border-white/10 p-6 md:block">
+            <div className="glass-card motion-float-soft absolute top-12 left-12 hidden flex-col gap-1 rounded-2xl border-white/10 p-6 md:block">
               <span className="text-h3 font-bold text-secondary">+€2.4M</span>
               <span className="font-label-caps text-[12px] text-body-soft">SUBVENCIONES GESTIONADAS</span>
             </div>
-            <div className="glass-card absolute right-12 bottom-12 hidden items-center gap-4 rounded-2xl border-white/10 p-6 md:flex">
+            <div className="glass-card absolute right-12 bottom-12 hidden items-center gap-4 rounded-2xl border-white/10 p-6 md:flex motion-shimmer">
               <div className="flex h-12 w-12 items-center justify-center rounded-full bg-secondary/20 text-secondary">
-                <span className="material-symbols-outlined">analytics</span>
+                <span className="material-symbols-outlined motion-pulse-soft">analytics</span>
               </div>
               <div>
                 <div className="mb-2 h-2 w-24 rounded-full bg-white/10">
@@ -210,7 +307,32 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-16 md:px-8 md:py-24">
+      <section className="mx-auto max-w-7xl px-4 py-12 md:px-8 md:py-16" data-motion data-motion-delay="60">
+        <div className="mb-10 text-center md:mb-12">
+          <span className="font-label-caps mb-4 block text-secondary">RESULTADOS REALES</span>
+          <h2 className="font-h2 text-h2 text-white">Impacto visible en operaciones y captación</h2>
+        </div>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {[
+            ['-62%', 'tiempo administrativo', 'Reducción media en tareas repetitivas de búsqueda, filtro y preparación documental.'],
+            ['+3.1x', 'convocatorias accionadas', 'Más oportunidades convertidas en expedientes presentados dentro de plazo.'],
+            ['+41%', 'ratio de elegibilidad', 'Mejor encaje entre perfil de asociado y requisitos técnicos de cada ayuda.'],
+          ].map(([value, label, desc]) => (
+            <article
+              className="group rounded-3xl border border-white/10 bg-slate-900/40 p-8 transition-all duration-300 hover:-translate-y-1 hover:border-secondary/40"
+              data-motion
+              data-motion-delay={String(100 + Number(value.length) * 20)}
+              key={label}
+            >
+              <p className="mb-3 text-4xl font-black tracking-tight text-secondary motion-float-soft">{value}</p>
+              <p className="font-label-caps mb-4 text-[11px] text-white">{label}</p>
+              <p className="text-sm text-body-soft">{desc}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-16 md:px-8 md:py-24" data-motion data-motion-delay="80">
         <div className="mb-10 flex flex-col items-start gap-6 md:mb-16 md:flex-row md:items-end md:gap-12">
           <div className="flex-1">
             <span className="font-label-caps mb-4 block text-secondary">EL RETO</span>
@@ -222,17 +344,17 @@ export function HomePage() {
         </div>
 
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          <div className="group rounded-3xl border border-white/5 bg-[#141a21] p-8 transition-all duration-500 hover:border-secondary/30">
+          <div className="group rounded-3xl border border-white/5 bg-[#141a21] p-8 transition-all duration-500 hover:border-secondary/30" data-motion="left" data-motion-delay="120">
             <span className="material-symbols-outlined mb-6 text-4xl text-[#ff8ea1]">description</span>
             <h3 className="text-h3 mb-4 text-white">Burocracia infinita</h3>
             <p className="text-body-soft">Documentación dispersa y procesos de solicitud que consumen semanas de trabajo productivo.</p>
           </div>
-          <div className="group rounded-3xl border border-white/5 bg-[#141a21] p-8 transition-all duration-500 hover:border-secondary/30">
+          <div className="group rounded-3xl border border-white/5 bg-[#141a21] p-8 transition-all duration-500 hover:border-secondary/30" data-motion data-motion-delay="180">
             <span className="material-symbols-outlined mb-6 text-4xl text-[#60a5fa]">schedule</span>
             <h3 className="text-h3 mb-4 text-white">Plazos perdidos</h3>
             <p className="text-body-soft">Convocatorias que pasan desapercibidas por la falta de un sistema de alerta inteligente y centralizado.</p>
           </div>
-          <div className="group rounded-3xl border border-white/5 bg-[#141a21] p-8 transition-all duration-500 hover:border-secondary/30">
+          <div className="group rounded-3xl border border-white/5 bg-[#141a21] p-8 transition-all duration-500 hover:border-secondary/30" data-motion="right" data-motion-delay="240">
             <span className="material-symbols-outlined mb-6 text-4xl text-secondary">data_loss_prevention</span>
             <h3 className="text-h3 mb-4 text-white">Datos aislados</h3>
             <p className="text-body-soft">La información de tus asociados no está estructurada para cumplir con los requisitos técnicos.</p>
@@ -240,7 +362,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden px-4 py-16 md:px-8 md:py-24">
+      <section className="relative overflow-hidden px-4 py-16 md:px-8 md:py-24" data-motion data-motion-delay="100">
         <div className="absolute top-0 right-0 h-full w-1/3 bg-secondary/5 blur-[120px]"></div>
         <div className="relative z-10 mx-auto max-w-7xl">
           <div className="mb-20 text-center">
@@ -256,8 +378,8 @@ export function HomePage() {
                 ['auto_fix_high', 'Auto-Generación', 'Preparamos el 90% de la documentación de forma automática.', false],
                 ['monetization_on', 'Ejecución', 'Presentación y seguimiento hasta la recepción del fondo.', true],
               ].map(([icon, title, text, isActive]) => (
-                <div key={title} className="group relative flex flex-col items-center text-center">
-                  <div className={`mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-secondary/40 text-secondary transition-transform group-hover:scale-110 ${isActive ? 'bg-secondary !text-on-secondary' : 'bg-[#101722]'}`}>
+                <div className="group relative flex flex-col items-center text-center" data-motion data-motion-delay={String(isActive ? 260 : 170)} key={title}>
+                  <div className={`mb-6 flex h-16 w-16 items-center justify-center rounded-2xl border border-secondary/40 text-secondary transition-transform group-hover:scale-110 motion-float-soft ${isActive ? 'bg-secondary !text-on-secondary' : 'bg-[#101722]'}`}>
                     <span className="material-symbols-outlined text-3xl">{icon}</span>
                   </div>
                   <h4 className="mb-2 font-bold text-white">{title}</h4>
@@ -269,31 +391,31 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-16 md:px-8 md:py-24">
+      <section className="mx-auto max-w-7xl px-4 py-16 md:px-8 md:py-24" data-motion data-motion-delay="120">
         <h2 className="font-h2 mb-16 text-center text-h2 text-white">Diseñado para la excelencia operativa</h2>
         <div className="grid h-auto grid-cols-1 gap-6 md:h-[600px] md:grid-cols-12">
-          <div className="glass-card group relative overflow-hidden rounded-[32px] p-10 md:col-span-8">
+          <div className="glass-card group relative overflow-hidden rounded-[32px] p-10 md:col-span-8" data-motion="left" data-motion-delay="140">
             <div className="absolute top-0 right-0 p-8 opacity-20 transition-opacity group-hover:opacity-40">
               <span className="material-symbols-outlined text-[120px] text-secondary">rocket_launch</span>
             </div>
             <h3 className="text-h2 mb-4 text-white">Velocidad Ejecutiva</h3>
             <p className="text-body-lg max-w-md text-body-soft">Reduzca el tiempo de preparación de meses a días. Nuestra plataforma escala sus capacidades de gestión sin aumentar su plantilla.</p>
           </div>
-          <div className="rounded-[32px] bg-secondary p-10 text-on-secondary md:col-span-4">
+          <div className="rounded-[32px] bg-secondary p-10 text-on-secondary md:col-span-4 motion-shimmer" data-motion="right" data-motion-delay="200">
             <span className="material-symbols-outlined text-5xl">shield</span>
             <div>
               <h3 className="mb-2 text-3xl font-bold">Compliance Total</h3>
               <p className="text-on-secondary/80">Seguridad de grado bancario y auditoría completa de cada proceso.</p>
             </div>
           </div>
-          <div className="rounded-[32px] border border-white/10 bg-slate-900/40 p-10 md:col-span-4">
+          <div className="rounded-[32px] border border-white/10 bg-slate-900/40 p-10 md:col-span-4" data-motion="left" data-motion-delay="240">
             <span className="material-symbols-outlined text-5xl text-[#60a5fa]">hub</span>
             <div>
               <h3 className="mb-2 text-2xl font-bold text-white">Ecosistema Conectado</h3>
               <p className="text-body-soft">Integración nativa con los CRMs líderes del mercado.</p>
             </div>
           </div>
-          <div className="glass-card flex items-center gap-12 rounded-[32px] p-10 md:col-span-8">
+          <div className="glass-card flex items-center gap-12 rounded-[32px] p-10 md:col-span-8" data-motion="right" data-motion-delay="280">
             <div className="flex-1">
               <h3 className="text-h3 mb-4 text-white">Visibilidad 360°</h3>
               <p className="text-body-soft">Dashboards en tiempo real para el seguimiento de fondos y KPIs de impacto financiero.</p>
@@ -305,7 +427,7 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="px-4 py-16 md:px-8 md:py-24">
+      <section className="px-4 py-16 md:px-8 md:py-24" data-motion data-motion-delay="140">
         <div className="mx-auto max-w-5xl">
           <div className="mb-16 text-center">
             <h2 className="font-h2 text-h2 text-white">Por qué elegir Subvenia</h2>
@@ -333,12 +455,79 @@ export function HomePage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden px-4 py-20 md:px-8 md:py-32">
+      <section className="relative overflow-hidden px-4 py-16 md:px-8 md:py-24" data-motion data-motion-delay="160">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(68,237,204,0.08),transparent_45%)]"></div>
+        <div className="relative mx-auto max-w-6xl">
+          <div className="mb-12 text-center">
+            <span className="font-label-caps mb-4 block text-secondary">DEMO NARRATIVA</span>
+            <h2 className="font-h2 text-h2 text-white">Cómo funciona en 3 pasos</h2>
+          </div>
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+            {[
+              ['01', 'Conectas tus datos', 'Importas base de asociados y criterios de elegibilidad para centralizar todo el contexto.'],
+              ['02', 'La IA prioriza y prepara', 'Subvenia cruza convocatorias, prioriza casos y genera borradores con requisitos clave.'],
+              ['03', 'Tu equipo ejecuta con control', 'Revisas, envías y haces seguimiento con trazabilidad completa y alertas en tiempo real.'],
+            ].map(([num, title, text]) => (
+              <article
+                className="group rounded-3xl border border-white/10 bg-[#141a21] p-8 transition-all duration-300 hover:-translate-y-1 hover:border-secondary/40"
+                data-motion
+                data-motion-delay={String(Number(num) * 120)}
+                key={title}
+              >
+                <span className="mb-5 inline-flex h-11 w-11 items-center justify-center rounded-full border border-secondary/40 bg-secondary/10 text-sm font-bold text-secondary transition-transform duration-300 group-hover:scale-110">
+                  {num}
+                </span>
+                <h3 className="mb-3 text-xl font-semibold text-white">{title}</h3>
+                <p className="text-body-soft">{text}</p>
+              </article>
+            ))}
+          </div>
+          <div className="mt-10 text-center">
+            <NavLink
+              className="inline-flex items-center justify-center gap-2 rounded-xl bg-secondary px-8 py-3 text-base font-bold text-on-secondary transition-transform hover:-translate-y-0.5"
+              onClick={() => trackEvent('cta_click', {cta_id: 'midpage_demo', location: 'demo_narrative'})}
+              to="/contacto"
+            >
+              Solicitar demo estratégica
+              <span className="material-symbols-outlined text-lg">arrow_forward</span>
+            </NavLink>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-4 py-16 md:px-8 md:py-20" data-motion data-motion-delay="200">
+        <div className="glass-card rounded-[28px] border border-white/10 p-8 md:p-10 motion-shimmer">
+          <div className="mb-8 text-center">
+            <span className="font-label-caps mb-3 block text-secondary">FLUJO DE ENTREGA</span>
+            <h2 className="text-3xl font-bold text-white">De la demo al plan ejecutable en 7 días</h2>
+          </div>
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+            {[
+              ['Diagnóstico', 'Demo estratégica y revisión de tu operativa actual.'],
+              ['Roadmap', 'Plan priorizado con convocatorias, roles y automatizaciones.'],
+              ['Ejecución', 'Arranque guiado con métricas y entregables semanales.'],
+            ].map(([title, text]) => (
+              <div className="rounded-2xl border border-white/10 bg-slate-950/35 p-5 transition-colors hover:border-secondary/35" data-motion data-motion-delay="130" key={title}>
+                <h3 className="mb-2 text-lg font-semibold text-white">{title}</h3>
+                <p className="text-sm text-body-soft">{text}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="relative overflow-hidden px-4 py-20 md:px-8 md:py-32" data-motion data-motion-delay="220">
         <div className="relative z-10 mx-auto max-w-4xl text-center">
           <h2 className="font-h1 mb-8 text-h1 text-white">¿Listo para desbloquear el potencial de su organización?</h2>
           <p className="font-body-lg mb-12 text-body-lg text-body-soft">Únase a las instituciones que ya están transformando datos en impacto económico real con Subvenia.</p>
           <div className="flex flex-col items-center justify-center gap-6 sm:flex-row">
-            <button className="rounded-2xl bg-secondary px-10 py-5 text-xl font-bold text-on-secondary shadow-[0_0_40px_rgba(68,237,204,0.3)] transition-transform hover:scale-105">Solicitar Demo Ejecutiva</button>
+            <NavLink
+              className="rounded-2xl bg-secondary px-10 py-5 text-xl font-bold text-on-secondary shadow-[0_0_40px_rgba(68,237,204,0.3)] transition-transform hover:scale-105"
+              onClick={() => trackEvent('cta_click', {cta_id: 'closing_demo', location: 'closing_section'})}
+              to="/contacto"
+            >
+              Solicitar demo estratégica
+            </NavLink>
             <p className="text-sm text-body-soft">Sin compromiso. Análisis de potencial gratuito.</p>
           </div>
         </div>
@@ -348,7 +537,7 @@ export function HomePage() {
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between px-4 py-10 md:flex-row md:px-8 md:py-12">
           <div className="mb-8 flex flex-col items-center gap-4 md:mb-0 md:items-start">
             <div className="text-xl font-bold text-white">Subvenia</div>
-            <p className="font-sans text-xs uppercase tracking-widest text-slate-400">© 2024 Subvenia. Executive Grant Automation.</p>
+            <p className="font-sans text-xs uppercase tracking-widest text-slate-400">© 2026 Subvenia. Executive Grant Automation.</p>
           </div>
           <div className="flex gap-8">
             <NavLink className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" to="/privacidad">Privacidad</NavLink>
@@ -363,13 +552,83 @@ export function HomePage() {
 }
 
 export function ContactPage() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    company: '',
+    message: '',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitFeedback, setSubmitFeedback] = useState<{type: 'idle' | 'success' | 'error'; text: string}>({
+    type: 'idle',
+    text: '',
+  });
+
+  const handleInputChange = (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const {id, value} = event.target;
+    setFormData((prev) => ({...prev, [id]: value}));
+
+    if (submitFeedback.type !== 'idle') {
+      setSubmitFeedback({type: 'idle', text: ''});
+    }
+  };
+
+  const handleContactSubmit = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    trackEvent('contact_form_submit', {form_id: 'contact_main', location: 'contact_page'});
+
+    if (!formData.name || !formData.email || !formData.company || !formData.message) {
+      setSubmitFeedback({
+        type: 'error',
+        text: 'Completa todos los campos antes de enviar.',
+      });
+      return;
+    }
+
+    try {
+      const config = validateEmailJsConfig();
+      if (!config.ok) {
+        setSubmitFeedback({
+          type: 'error',
+          text: `Falta configuración EmailJS: ${config.missing.join(', ')}`,
+        });
+        return;
+      }
+
+      setIsSubmitting(true);
+      await sendContactEmail(formData);
+      trackEvent('contact_form_success', {form_id: 'contact_main'});
+      setSubmitFeedback({
+        type: 'success',
+        text: 'Mensaje enviado correctamente. Te contactaremos en menos de 24h.',
+      });
+      setFormData({name: '', email: '', company: '', message: ''});
+    } catch (error: unknown) {
+      const errorMessage =
+        typeof error === 'object' && error !== null && 'text' in error
+          ? String((error as {text?: unknown}).text)
+          : error instanceof Error
+            ? error.message
+            : 'Error desconocido';
+
+      console.error('EmailJS error:', error);
+      trackEvent('contact_form_error', {form_id: 'contact_main'});
+      setSubmitFeedback({
+        type: 'error',
+        text: `No se pudo enviar (${errorMessage}). Revisa Service ID, Template ID, Public Key y variables del template.`,
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <>
-      <section className="relative overflow-hidden px-4 pt-32 pb-16 md:px-8 md:pt-40 md:pb-24" id="contacto">
+      <section className="relative overflow-hidden px-4 pt-32 pb-16 md:px-8 md:pt-40 md:pb-24" data-motion data-motion-delay="80" id="contacto">
         <div className="absolute top-0 right-0 h-72 w-72 rounded-full bg-secondary/12 blur-3xl"></div>
         <div className="absolute bottom-0 left-0 h-72 w-72 rounded-full bg-secondary/8 blur-3xl"></div>
         <div className="relative mx-auto grid w-full max-w-7xl grid-cols-1 gap-8 md:grid-cols-2 md:gap-12">
-          <div className="glass-card inner-glow rounded-[32px] p-8 md:p-10">
+          <div className="glass-card inner-glow rounded-[32px] p-8 md:p-10" data-motion="left" data-motion-delay="120">
             <span className="font-label-caps mb-4 inline-flex items-center gap-2 rounded-full border border-secondary/30 bg-secondary/10 px-3 py-1 text-secondary">
               <span className="material-symbols-outlined text-base">alternate_email</span>
               CONTACTO
@@ -379,15 +638,15 @@ export function ContactPage() {
               Comparte tus objetivos y analizamos el potencial de subvención de tu red de asociados con un enfoque técnico, accionable y alineado con tus prioridades.
             </p>
             <div className="mb-8 space-y-4 text-body-soft">
-              <p className="group flex items-center gap-3">
+              <p className="group flex items-center gap-3 motion-float-soft">
                 <span className="material-symbols-outlined text-secondary transition-transform duration-300 group-hover:scale-110">mail</span>
                 contacto@subvenia.ai
               </p>
-              <p className="group flex items-center gap-3">
+              <p className="group flex items-center gap-3 motion-float-soft">
                 <span className="material-symbols-outlined text-secondary transition-transform duration-300 group-hover:scale-110">call</span>
                 +34 900 123 456
               </p>
-              <p className="group flex items-center gap-3">
+              <p className="group flex items-center gap-3 motion-float-soft">
                 <span className="material-symbols-outlined text-secondary transition-transform duration-300 group-hover:scale-110">schedule</span>
                 Respondemos en menos de 24 horas
               </p>
@@ -404,28 +663,38 @@ export function ContactPage() {
             </div>
           </div>
 
-          <div className="glass-card rounded-[32px] border border-white/10 p-8 shadow-[0_20px_60px_-30px_rgba(68,237,204,0.35)] md:p-10">
+          <div className="glass-card rounded-[32px] border border-white/10 p-8 shadow-[0_20px_60px_-30px_rgba(68,237,204,0.35)] md:p-10" data-motion="right" data-motion-delay="180">
             <h3 className="mb-2 text-2xl font-bold text-white">Cuéntanos tu caso</h3>
             <p className="mb-6 text-sm text-body-soft">Te contactamos con una propuesta inicial adaptada a tu organización.</p>
-            <form className="space-y-5">
+            <form className="space-y-5" onSubmit={handleContactSubmit}>
               <div>
                 <label className="mb-2 block text-sm font-medium text-body-soft" htmlFor="nombre">Nombre completo</label>
-                <input className="w-full rounded-xl border border-white/15 bg-slate-950/50 px-4 py-3 text-white outline-none transition-all placeholder:text-slate-400 focus:-translate-y-0.5 focus:border-secondary focus:shadow-[0_0_0_3px_rgba(68,237,204,0.15)]" id="nombre" placeholder="Tu nombre" type="text" />
+                <input className="w-full rounded-xl border border-white/15 bg-slate-950/50 px-4 py-3 text-white outline-none transition-all placeholder:text-slate-400 focus:-translate-y-0.5 focus:border-secondary focus:shadow-[0_0_0_3px_rgba(68,237,204,0.15)]" id="name" onChange={handleInputChange} placeholder="Tu nombre" type="text" value={formData.name} />
               </div>
               <div>
                 <label className="mb-2 block text-sm font-medium text-body-soft" htmlFor="email">Email profesional</label>
-                <input className="w-full rounded-xl border border-white/15 bg-slate-950/50 px-4 py-3 text-white outline-none transition-all placeholder:text-slate-400 focus:-translate-y-0.5 focus:border-secondary focus:shadow-[0_0_0_3px_rgba(68,237,204,0.15)]" id="email" placeholder="nombre@empresa.com" type="email" />
+                <input className="w-full rounded-xl border border-white/15 bg-slate-950/50 px-4 py-3 text-white outline-none transition-all placeholder:text-slate-400 focus:-translate-y-0.5 focus:border-secondary focus:shadow-[0_0_0_3px_rgba(68,237,204,0.15)]" id="email" onChange={handleInputChange} placeholder="nombre@empresa.com" type="email" value={formData.email} />
               </div>
               <div>
-                <label className="mb-2 block text-sm font-medium text-body-soft" htmlFor="empresa">Empresa / Organización</label>
-                <input className="w-full rounded-xl border border-white/15 bg-slate-950/50 px-4 py-3 text-white outline-none transition-all placeholder:text-slate-400 focus:-translate-y-0.5 focus:border-secondary focus:shadow-[0_0_0_3px_rgba(68,237,204,0.15)]" id="empresa" placeholder="Nombre de tu organización" type="text" />
+                <label className="mb-2 block text-sm font-medium text-body-soft" htmlFor="company">Empresa / Organización</label>
+                <input className="w-full rounded-xl border border-white/15 bg-slate-950/50 px-4 py-3 text-white outline-none transition-all placeholder:text-slate-400 focus:-translate-y-0.5 focus:border-secondary focus:shadow-[0_0_0_3px_rgba(68,237,204,0.15)]" id="company" onChange={handleInputChange} placeholder="Nombre de tu organización" type="text" value={formData.company} />
               </div>
               <div>
-                <label className="mb-2 block text-sm font-medium text-body-soft" htmlFor="mensaje">Mensaje</label>
-                <textarea className="h-32 w-full resize-none rounded-xl border border-white/15 bg-slate-950/50 px-4 py-3 text-white outline-none transition-all placeholder:text-slate-400 focus:-translate-y-0.5 focus:border-secondary focus:shadow-[0_0_0_3px_rgba(68,237,204,0.15)]" id="mensaje" placeholder="Describe brevemente qué necesitas..." />
+                <label className="mb-2 block text-sm font-medium text-body-soft" htmlFor="message">Mensaje</label>
+                <textarea className="h-32 w-full resize-none rounded-xl border border-white/15 bg-slate-950/50 px-4 py-3 text-white outline-none transition-all placeholder:text-slate-400 focus:-translate-y-0.5 focus:border-secondary focus:shadow-[0_0_0_3px_rgba(68,237,204,0.15)]" id="message" onChange={handleInputChange} placeholder="Describe brevemente qué necesitas..." value={formData.message} />
               </div>
-              <button className="flex w-full items-center justify-center gap-2 rounded-xl bg-secondary px-6 py-3 text-base font-bold text-on-secondary transition-all hover:-translate-y-0.5 hover:shadow-[0_0_24px_rgba(68,237,204,0.35)]" type="submit">
-                Solicitar contacto
+              {submitFeedback.type !== 'idle' ? (
+                <p className={`text-sm ${submitFeedback.type === 'success' ? 'text-emerald-300' : 'text-red-300'}`}>
+                  {submitFeedback.text}
+                </p>
+              ) : null}
+              <button
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-secondary px-6 py-3 text-base font-bold text-on-secondary transition-all hover:-translate-y-0.5 hover:shadow-[0_0_24px_rgba(68,237,204,0.35)] disabled:cursor-not-allowed disabled:opacity-70"
+                disabled={isSubmitting}
+                onClick={() => trackEvent('cta_click', {cta_id: 'contact_form_submit', location: 'contact_form'})}
+                type="submit"
+              >
+                {isSubmitting ? 'Enviando...' : 'Solicitar demo estratégica'}
                 <span className="material-symbols-outlined text-lg">arrow_forward</span>
               </button>
             </form>
@@ -437,7 +706,7 @@ export function ContactPage() {
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between px-4 py-10 md:flex-row md:px-8 md:py-12">
           <div className="mb-8 flex flex-col items-center gap-4 md:mb-0 md:items-start">
             <div className="text-xl font-bold text-white">Subvenia</div>
-            <p className="font-sans text-xs uppercase tracking-widest text-slate-400">© 2024 Subvenia. Executive Grant Automation.</p>
+            <p className="font-sans text-xs uppercase tracking-widest text-slate-400">© 2026 Subvenia. Executive Grant Automation.</p>
           </div>
           <div className="flex gap-8">
             <NavLink className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" to="/privacidad">Privacidad</NavLink>
@@ -490,6 +759,39 @@ export function MethodologyPage() {
     },
   ];
 
+  const [visibleCount, setVisibleCount] = useState(0);
+  const stepRefs = useRef<Array<HTMLDivElement | null>>([]);
+
+  useEffect(() => {
+    const updateVisibleSteps = () => {
+      const revealLine = window.innerHeight * 0.82;
+      let nextVisible = 0;
+
+      for (let i = 0; i < stepRefs.current.length; i += 1) {
+        const element = stepRefs.current[i];
+        if (!element) {
+          continue;
+        }
+
+        const {top} = element.getBoundingClientRect();
+        if (top <= revealLine) {
+          nextVisible = i + 1;
+        }
+      }
+
+      setVisibleCount(nextVisible);
+    };
+
+    window.addEventListener('scroll', updateVisibleSteps, {passive: true});
+    window.addEventListener('resize', updateVisibleSteps);
+    updateVisibleSteps();
+
+    return () => {
+      window.removeEventListener('scroll', updateVisibleSteps);
+      window.removeEventListener('resize', updateVisibleSteps);
+    };
+  }, [steps.length]);
+
   return (
     <>
       <section className="relative overflow-hidden px-4 pt-32 pb-16 md:px-8 md:pt-40 md:pb-24">
@@ -510,8 +812,20 @@ export function MethodologyPage() {
                 const isRight = index % 2 === 1;
                 return (
                   <div className="relative grid grid-cols-1 items-center gap-6 md:grid-cols-2 md:gap-10" key={step.title}>
-                    <div className={`${isRight ? 'md:order-2' : ''}`}>
-                      <div className="glass-card rounded-[24px] border border-white/10 p-6 md:p-7">
+                    <div
+                      className={`${isRight ? 'md:order-2' : ''}`}
+                      ref={(element) => {
+                        stepRefs.current[index] = element;
+                      }}
+                    >
+                      <div
+                        className={`glass-card rounded-[24px] border border-white/10 p-6 transition-all duration-700 ease-out md:p-7 ${
+                          index < visibleCount
+                            ? 'translate-y-0 opacity-100'
+                            : 'translate-y-6 opacity-0'
+                        }`}
+                        style={{transitionDelay: `${index * 90}ms`}}
+                      >
                         <div className="mb-4 flex items-center justify-between">
                           <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl border border-secondary/40 bg-slate-950/60 text-secondary">
                             <span className="material-symbols-outlined text-xl">{step.icon}</span>
@@ -538,7 +852,7 @@ export function MethodologyPage() {
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between px-4 py-10 md:flex-row md:px-8 md:py-12">
           <div className="mb-8 flex flex-col items-center gap-4 md:mb-0 md:items-start">
             <div className="text-xl font-bold text-white">Subvenia</div>
-            <p className="font-sans text-xs uppercase tracking-widest text-slate-400">© 2024 Subvenia. Executive Grant Automation.</p>
+            <p className="font-sans text-xs uppercase tracking-widest text-slate-400">© 2026 Subvenia. Executive Grant Automation.</p>
           </div>
           <div className="flex gap-8">
             <NavLink className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" to="/privacidad">Privacidad</NavLink>
@@ -609,9 +923,9 @@ const casosDeUsoContexto = [
 export function CasosDeUsoPage() {
   return (
     <>
-      <section className="relative overflow-hidden px-4 pt-32 pb-16 md:px-8 md:pt-40 md:pb-24">
+      <section className="relative overflow-hidden px-4 pt-32 pb-16 md:px-8 md:pt-40 md:pb-24" data-motion data-motion-delay="70">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_10%,rgba(68,237,204,0.1),transparent_40%)]"></div>
-        <div className="relative mx-auto max-w-4xl text-center">
+        <div className="relative mx-auto max-w-4xl text-center" data-motion="scale" data-motion-delay="110">
           <span className="font-label-caps mb-4 block text-secondary">CASOS DE USO</span>
           <h1 className="font-h1 mb-6 text-4xl leading-tight text-white md:text-h1">Cómo usan Subvenia las organizaciones</h1>
           <p className="font-body-lg text-body-soft">
@@ -621,13 +935,15 @@ export function CasosDeUsoPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-16 md:px-8 md:py-24">
+      <section className="mx-auto max-w-7xl px-4 py-16 md:px-8 md:py-24" data-motion data-motion-delay="90">
         <h2 className="font-h2 mb-10 text-center text-h2 text-white md:mb-14">Organizaciones que más valor obtienen</h2>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {casosDeUsoOrganizaciones.map((item) => (
             <div
               key={item.title}
               className="group rounded-3xl border border-white/5 bg-[#141a21] p-8 transition-all duration-500 hover:border-secondary/30"
+              data-motion
+              data-motion-delay="130"
             >
               <span className="material-symbols-outlined mb-6 text-4xl text-secondary">{item.icon}</span>
               <h3 className="text-h3 mb-4 text-white">{item.title}</h3>
@@ -637,7 +953,7 @@ export function CasosDeUsoPage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden px-4 py-16 md:px-8 md:py-24">
+      <section className="relative overflow-hidden px-4 py-16 md:px-8 md:py-24" data-motion data-motion-delay="110">
         <div className="absolute top-0 right-0 h-full w-1/3 bg-secondary/5 blur-[120px]"></div>
         <div className="relative z-10 mx-auto max-w-7xl">
           <div className="mb-12 text-center md:mb-16">
@@ -646,7 +962,7 @@ export function CasosDeUsoPage() {
           </div>
           <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             {casosDeUsoRoles.map((item) => (
-              <article key={item.titulo} className="glass-card rounded-[24px] border border-white/10 p-7 md:p-8">
+              <article className="glass-card rounded-[24px] border border-white/10 p-7 md:p-8" data-motion="scale" data-motion-delay="140" key={item.titulo}>
                 <p className="font-label-caps mb-6 text-[11px] text-secondary">{item.titulo}</p>
                 <div className="space-y-5">
                   <div>
@@ -664,13 +980,15 @@ export function CasosDeUsoPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-7xl px-4 py-16 md:px-8 md:py-24">
+      <section className="mx-auto max-w-7xl px-4 py-16 md:px-8 md:py-24" data-motion data-motion-delay="120">
         <h2 className="font-h2 mb-10 text-center text-h2 text-white md:mb-14">Cuándo implementar Subvenia</h2>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {casosDeUsoContexto.map((m) => (
             <div
               key={m.title}
               className="rounded-3xl border border-white/10 bg-slate-900/40 p-8 text-center transition-all hover:border-secondary/25"
+              data-motion
+              data-motion-delay="130"
             >
               <p className="mb-3 text-lg font-bold text-white">{m.title}</p>
               <p className="text-sm text-body-soft">{m.desc}</p>
@@ -679,11 +997,11 @@ export function CasosDeUsoPage() {
         </div>
       </section>
 
-      <section className="relative overflow-hidden px-4 py-16 md:px-8 md:py-20">
+      <section className="relative overflow-hidden px-4 py-16 md:px-8 md:py-20" data-motion data-motion-delay="140">
         <div className="relative z-10 mx-auto max-w-5xl">
-          <div className="glass-card inner-glow rounded-[28px] border border-white/10 p-8 md:p-12">
+          <div className="glass-card inner-glow rounded-[28px] border border-white/10 p-8 md:p-12 motion-shimmer">
             <div className="mb-6 justify-center md:justify-start">
-              <span className="material-symbols-outlined flex h-14 w-14 items-center justify-center rounded-2xl border border-secondary/40 bg-secondary/10 text-3xl text-secondary">
+              <span className="material-symbols-outlined motion-pulse-soft flex h-14 w-14 items-center justify-center rounded-2xl border border-secondary/40 bg-secondary/10 text-3xl text-secondary">
                 verified
               </span>
             </div>
@@ -699,7 +1017,7 @@ export function CasosDeUsoPage() {
         </div>
       </section>
 
-      <section className="mx-auto max-w-4xl px-4 pb-24 pt-4 text-center md:px-8">
+      <section className="mx-auto max-w-4xl px-4 pb-24 pt-4 text-center md:px-8" data-motion data-motion-delay="160">
         <NavLink
           className="inline-flex items-center justify-center gap-2 rounded-2xl bg-secondary px-10 py-5 text-xl font-bold text-on-secondary shadow-[0_0_40px_rgba(68,237,204,0.3)] transition-transform hover:scale-105"
           to="/contacto"
@@ -713,7 +1031,7 @@ export function CasosDeUsoPage() {
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between px-4 py-10 md:flex-row md:px-8 md:py-12">
           <div className="mb-8 flex flex-col items-center gap-4 md:mb-0 md:items-start">
             <div className="text-xl font-bold text-white">Subvenia</div>
-            <p className="font-sans text-xs uppercase tracking-widest text-slate-400">© 2024 Subvenia. Executive Grant Automation.</p>
+            <p className="font-sans text-xs uppercase tracking-widest text-slate-400">© 2026 Subvenia. Executive Grant Automation.</p>
           </div>
           <div className="flex gap-8">
             <NavLink className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" to="/privacidad">Privacidad</NavLink>
@@ -765,8 +1083,8 @@ export function PricingPage() {
     <>
       <div className="relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_80%_0%,rgba(68,237,204,0.12),transparent_45%)]"></div>
-        <section className="relative px-4 pt-32 pb-12 md:px-8 md:pt-40 md:pb-16">
-          <div className="relative mx-auto max-w-6xl text-center">
+        <section className="relative px-4 pt-32 pb-12 md:px-8 md:pt-40 md:pb-16" data-motion data-motion-delay="70">
+          <div className="relative mx-auto max-w-6xl text-center" data-motion="scale" data-motion-delay="110">
             <span className="font-label-caps mb-4 inline-block text-secondary">PLANES Y LICENCIAS</span>
             <h1 className="font-h1 mb-6 text-4xl leading-tight text-white md:text-h1">Precios claros, alineados con tu escala</h1>
             <p className="font-body-lg mx-auto max-w-2xl text-body-soft">
@@ -775,7 +1093,7 @@ export function PricingPage() {
           </div>
         </section>
 
-        <section className="relative mx-auto max-w-7xl px-4 pb-20 md:px-8 md:pb-28">
+        <section className="relative mx-auto max-w-7xl px-4 pb-20 md:px-8 md:pb-28" data-motion data-motion-delay="100">
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {pricingPlans.map((plan) => (
             <div
@@ -785,6 +1103,8 @@ export function PricingPage() {
                   ? 'border-secondary/50 bg-[#0d1828] shadow-[0_0_0_1px_rgba(68,237,204,0.2),0_24px_60px_-20px_rgba(68,237,204,0.25)]'
                   : 'border-white/10 bg-[#141a21]'
               }`}
+              data-motion={plan.highlight ? 'scale' : 'up'}
+              data-motion-delay={plan.highlight ? '200' : '140'}
             >
               {plan.highlight ? (
                 <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full border border-secondary/40 bg-secondary/15 px-4 py-1 font-label-caps text-[10px] text-secondary">
@@ -826,7 +1146,7 @@ export function PricingPage() {
           ))}
         </div>
 
-        <div className="glass-card inner-glow mx-auto mt-14 max-w-4xl rounded-[28px] border border-white/10 p-8 md:p-10">
+        <div className="glass-card inner-glow mx-auto mt-14 max-w-4xl rounded-[28px] border border-white/10 p-8 md:p-10 motion-shimmer" data-motion data-motion-delay="220">
           <h3 className="mb-6 text-center text-xl font-bold text-white">Incluido en todos los planes</h3>
           <div className="grid gap-4 text-sm text-body-soft sm:grid-cols-2">
             {[
@@ -835,7 +1155,7 @@ export function PricingPage() {
               'Actualizaciones de producto continuas',
               'Biblioteca de plantillas de solicitud',
             ].map((item) => (
-              <div key={item} className="flex items-center gap-3 rounded-xl border border-white/5 bg-slate-950/30 px-4 py-3">
+              <div className="flex items-center gap-3 rounded-xl border border-white/5 bg-slate-950/30 px-4 py-3" data-motion data-motion-delay="130" key={item}>
                 <span className="material-symbols-outlined text-secondary">verified</span>
                 <span className="text-white">{item}</span>
               </div>
@@ -849,7 +1169,7 @@ export function PricingPage() {
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between px-4 py-10 md:flex-row md:px-8 md:py-12">
           <div className="mb-8 flex flex-col items-center gap-4 md:mb-0 md:items-start">
             <div className="text-xl font-bold text-white">Subvenia</div>
-            <p className="font-sans text-xs uppercase tracking-widest text-slate-400">© 2024 Subvenia. Executive Grant Automation.</p>
+            <p className="font-sans text-xs uppercase tracking-widest text-slate-400">© 2026 Subvenia. Executive Grant Automation.</p>
           </div>
           <div className="flex gap-8">
             <NavLink className="font-sans text-xs uppercase tracking-widest text-slate-400 transition-colors hover:text-emerald-400" to="/privacidad">Privacidad</NavLink>
