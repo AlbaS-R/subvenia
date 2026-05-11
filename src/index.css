@@ -43,6 +43,179 @@ body {
 
 #root {
   min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Etiquetas en mayúsculas: tamaño mínimo legible */
+.font-label-caps {
+  font-size: 0.8125rem;
+  line-height: 1.25;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+}
+
+@keyframes hero-bloom {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: translate3d(2%, -3%, 0) scale(1.08);
+  }
+}
+
+.hero-ambient-blob,
+.site-ambient-blob {
+  animation: hero-bloom 14s ease-in-out infinite;
+}
+
+/* Halo premium (sin rotación continua): respiración suave tipo showcase */
+@keyframes ms-halo-breathe {
+  0%,
+  100% {
+    opacity: 0.38;
+    transform: scale(1);
+    filter: blur(10px);
+  }
+  50% {
+    opacity: 0.58;
+    transform: scale(1.04);
+    filter: blur(14px);
+  }
+}
+
+.ms-breathe-halo {
+  animation: ms-halo-breathe 14s ease-in-out infinite;
+}
+
+/* Capa global: masas de color que se desplazan (todas las páginas) */
+@keyframes aurora-wander {
+  0%,
+  100% {
+    transform: translate3d(-8%, -6%, 0) scale(1) rotate(0deg);
+  }
+  33% {
+    transform: translate3d(6%, 4%, 0) scale(1.06) rotate(120deg);
+  }
+  66% {
+    transform: translate3d(-4%, 8%, 0) scale(1.03) rotate(240deg);
+  }
+}
+
+@keyframes flow-gradient-move {
+  0%,
+  100% {
+    background-position: 0% 40%;
+  }
+  50% {
+    background-position: 100% 60%;
+  }
+}
+
+@keyframes grid-drift {
+  0% {
+    opacity: 0.035;
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    opacity: 0.055;
+    transform: translate3d(-12px, -8px, 0);
+  }
+  100% {
+    opacity: 0.035;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@keyframes beam-sweep {
+  0% {
+    transform: translate3d(-60%, 20%, 0) rotate(-18deg);
+    opacity: 0;
+  }
+  15% {
+    opacity: 0.12;
+  }
+  50% {
+    transform: translate3d(40%, -10%, 0) rotate(-18deg);
+    opacity: 0.08;
+  }
+  85% {
+    opacity: 0.1;
+  }
+  100% {
+    transform: translate3d(120%, -40%, 0) rotate(-18deg);
+    opacity: 0;
+  }
+}
+
+.site-aurora-layer {
+  position: fixed;
+  inset: -45%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 75% 55% at 25% 25%, rgba(68, 237, 204, 0.2), transparent 58%),
+    radial-gradient(ellipse 65% 50% at 78% 72%, rgba(59, 130, 246, 0.18), transparent 55%),
+    radial-gradient(ellipse 50% 45% at 48% 48%, rgba(10, 27, 51, 0), transparent 72%);
+  animation: aurora-wander 32s ease-in-out infinite;
+  opacity: 0.75;
+}
+
+.site-flow-gradient {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  opacity: 0.35;
+  background: linear-gradient(
+    118deg,
+    transparent 0%,
+    rgba(68, 237, 204, 0.14) 22%,
+    transparent 42%,
+    rgba(96, 165, 250, 0.12) 58%,
+    transparent 78%,
+    rgba(68, 237, 204, 0.1) 100%
+  );
+  background-size: 240% 240%;
+  animation: flow-gradient-move 20s ease-in-out infinite;
+}
+
+.site-grid-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(ellipse 90% 75% at 50% 35%, black 0%, transparent 72%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 75% at 50% 35%, black 0%, transparent 72%);
+  animation: grid-drift 24s ease-in-out infinite;
+}
+
+.site-light-beam {
+  position: fixed;
+  top: -20%;
+  left: -30%;
+  z-index: 0;
+  width: 55%;
+  height: 140%;
+  pointer-events: none;
+  background: linear-gradient(
+    105deg,
+    transparent 0%,
+    rgba(68, 237, 204, 0.06) 45%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(59, 130, 246, 0.06) 55%,
+    transparent 100%
+  );
+  filter: blur(28px);
+  animation: beam-sweep 36s ease-in-out infinite;
 }
 
 @utility mesh-gradient {
@@ -165,7 +338,9 @@ body {
     radial-gradient(at 0% 0%, rgba(0, 209, 178, 0.16) 0, transparent 56%),
     radial-gradient(at 100% 100%, rgba(41, 121, 255, 0.16) 0, transparent 56%),
     radial-gradient(at 50% 45%, rgba(10, 27, 51, 0.98) 0, rgba(16, 20, 21, 0.92) 58%, rgba(16, 20, 21, 1) 100%);
-  animation: mesh-float 18s ease-in-out infinite;
+  background-size: 100% 100%, 100% 100%, 120% 120%;
+  background-position: 0% 0%, 100% 100%, 50% 50%;
+  animation: mesh-float 18s ease-in-out infinite, mesh-bg-shift 40s ease-in-out infinite;
 }
 
 .site-mesh-bg::before {
@@ -176,7 +351,17 @@ body {
     radial-gradient(circle at 18% 24%, rgba(68, 237, 204, 0.13), transparent 38%),
     radial-gradient(circle at 78% 72%, rgba(59, 130, 246, 0.12), transparent 36%);
   filter: blur(42px);
-  animation: mesh-drift 22s ease-in-out infinite;
+  animation: mesh-drift 22s ease-in-out infinite, organic-float 12s ease-in-out infinite;
+}
+
+@keyframes mesh-bg-shift {
+  0%,
+  100% {
+    background-position: 0% 0%, 100% 100%, 50% 50%;
+  }
+  50% {
+    background-position: 8% 6%, 92% 88%, 45% 55%;
+  }
 }
 
 .motion-reveal {
@@ -332,13 +517,275 @@ button:hover {
   transform: translateY(-1px);
 }
 
-.site-mesh-bg::before {
-  animation: mesh-drift 22s ease-in-out infinite, organic-float 12s ease-in-out infinite;
+/* —— Metodología: estética hero / motion (inspiración tipo MotionSites) —— */
+@keyframes ms-blob-primary {
+  0%,
+  100% {
+    transform: translate3d(-4%, 0, 0) scale(1);
+    opacity: 0.9;
+  }
+  50% {
+    transform: translate3d(6%, -5%, 0) scale(1.07);
+    opacity: 1;
+  }
+}
+
+@keyframes ms-blob-secondary {
+  0%,
+  100% {
+    transform: translate3d(3%, 2%, 0) scale(1.02);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translate3d(-5%, -4%, 0) scale(1.08);
+    opacity: 1;
+  }
+}
+
+@keyframes ms-kinetic-shift {
+  0%,
+  100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+@keyframes method-pulse-ring {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.65;
+    transform: scale(1.04);
+  }
+}
+
+@keyframes ms-ambient-breathe {
+  0%,
+  100% {
+    opacity: 0.32;
+    transform: translate3d(-50%, 0, 0) scale(1);
+  }
+  50% {
+    opacity: 0.72;
+    transform: translate3d(-50%, 6%, 0) scale(1.06);
+  }
+}
+
+@keyframes method-scroll-hint {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.5;
+  }
+  50% {
+    transform: translate3d(0, 6px, 0);
+    opacity: 1;
+  }
+}
+
+.ms-blob {
+  will-change: transform;
+}
+
+.ms-blob--primary {
+  animation: ms-blob-primary 18s ease-in-out infinite;
+}
+
+.ms-blob--secondary {
+  animation: ms-blob-secondary 22s ease-in-out infinite;
+  animation-delay: -5s;
+}
+
+/* Texto con gradiente cinético (showcase tipo MotionSites, colores Subvenia) */
+.ms-kinetic-text,
+.method-gradient-headline {
+  background: linear-gradient(
+    118deg,
+    #f8fffe 0%,
+    #b8f5eb 14%,
+    #44edcc 32%,
+    #5eead4 44%,
+    #7dd3fc 58%,
+    #e0fdfa 72%,
+    #44edcc 88%,
+    #f0fffc 100%
+  );
+  background-size: 280% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: ms-kinetic-shift 20s ease-in-out infinite;
+}
+
+/* Campo de sección: spotlight + líneas verticales (sustituye rejilla “ruido”) */
+.ms-section-field {
+  --ms-field-strength: 0.42;
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  opacity: var(--ms-field-strength);
+  background:
+    radial-gradient(ellipse 95% 85% at 50% -5%, rgba(68, 237, 204, 0.14), transparent 55%),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 100% 100%, 80px 100%;
+  mask-image: radial-gradient(ellipse 88% 72% at 50% 22%, black 0%, transparent 78%);
+  -webkit-mask-image: radial-gradient(ellipse 88% 72% at 50% 22%, black 0%, transparent 78%);
+}
+
+.ms-section-field--quiet {
+  --ms-field-strength: 0.26;
+}
+
+.ms-section-field--medium {
+  --ms-field-strength: 0.32;
+}
+
+/* —— Contenedor de página alineado con Metodología —— */
+.method-page {
+  position: relative;
+}
+
+/* Rejilla del hero metodología (máscara radial + cuadrícula fina) */
+.ms-hero-grid-overlay {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  opacity: 0.07;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.9) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.9) 1px, transparent 1px);
+  background-size: 56px 56px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 40%, black, transparent);
+}
+
+/* Franja de sección densa (misma base que la línea de tiempo) */
+.method-band {
+  position: relative;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(7, 12, 18, 0.8);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.method-band-glow {
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 45% at 50% 0%, rgba(68, 237, 204, 0.07), transparent 55%);
+}
+
+/* Tarjeta cristal oscuro como los pasos de Metodología */
+.method-surface-card {
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background: rgba(10, 16, 28, 0.9);
+  -webkit-backdrop-filter: blur(24px);
+  backdrop-filter: blur(24px);
+  box-shadow: 0 20px 60px -36px rgba(0, 0, 0, 0.9);
+}
+
+.method-pipeline-node {
+  position: relative;
+  box-shadow:
+    0 0 0 1px rgba(68, 237, 204, 0.25),
+    0 0 28px rgba(68, 237, 204, 0.12);
+}
+
+.method-pipeline-node::after {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  border: 1px solid rgba(68, 237, 204, 0.15);
+  animation: method-pulse-ring 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+.method-connector-line {
+  background: linear-gradient(90deg, rgba(68, 237, 204, 0.45), rgba(96, 165, 250, 0.25), rgba(68, 237, 204, 0.35));
+  background-size: 200% 100%;
+  animation: shimmer-x 5s linear infinite;
+}
+
+/* Luz ambiente en tarjetas (sin barrido lateral) */
+.ms-card-ambient {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+
+.ms-card-ambient::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -45%;
+  width: 130%;
+  height: 85%;
+  transform: translate3d(-50%, 0, 0);
+  background: radial-gradient(ellipse closest-side, rgba(68, 237, 204, 0.16), transparent 72%);
+  animation: ms-ambient-breathe 7s ease-in-out infinite;
+}
+
+.method-scroll-hint {
+  animation: method-scroll-hint 2.2s ease-in-out infinite;
+  background: transparent;
+  font: inherit;
+}
+
+@keyframes method-timeline-flow {
+  0%,
+  100% {
+    background-position: 0% 0%;
+  }
+  50% {
+    background-position: 0% 100%;
+  }
+}
+
+.method-timeline-line {
+  background: linear-gradient(
+    180deg,
+    rgba(68, 237, 204, 0.55) 0%,
+    rgba(96, 165, 250, 0.25) 45%,
+    rgba(68, 237, 204, 0.4) 100%
+  );
+  background-size: 100% 220%;
+  animation: method-timeline-flow 8s ease-in-out infinite;
+}
+
+.method-timeline-node {
+  box-shadow:
+    0 0 0 1px rgba(68, 237, 204, 0.35),
+    0 0 24px rgba(68, 237, 204, 0.15);
 }
 
 @media (prefers-reduced-motion: reduce) {
   .site-mesh-bg,
   .site-mesh-bg::before,
+  .site-aurora-layer,
+  .site-flow-gradient,
+  .site-grid-overlay,
+  .site-light-beam,
+  .hero-ambient-blob,
+  .site-ambient-blob,
+  .ms-breathe-halo,
+  .ms-blob--primary,
+  .ms-blob--secondary,
+  .ms-kinetic-text,
+  .method-gradient-headline,
+  .method-pipeline-node::after,
+  .method-connector-line,
+  .ms-card-ambient::after,
+  .method-scroll-hint,
+  .method-timeline-line,
   main section,
   main div[class*="rounded-"],
   main article[class*="rounded-"],
@@ -347,6 +794,14 @@ button:hover {
     animation: none !important;
     transition: none !important;
     transform: none !important;
+  }
+
+  .ms-kinetic-text,
+  .method-gradient-headline {
+    background: none;
+    -webkit-text-fill-color: #ffffff;
+    color: #ffffff;
+    animation: none !important;
   }
 
   .motion-reveal {
