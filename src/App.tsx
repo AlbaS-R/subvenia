@@ -252,13 +252,13 @@ export function HomePage() {
         <MethodologyHeroDecorations />
         <div className="relative z-10 mx-auto flex w-full max-w-5xl flex-col items-center pt-28 md:pt-36">
           <div className="mb-6 inline-flex flex-wrap items-center justify-center gap-2" data-motion data-motion-delay="20">
-            <span className="rounded-full border border-secondary/35 bg-secondary/10 px-4 py-1.5 font-label-caps text-secondary">No es un buscador</span>
-            <span className="rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm text-body-soft">Es un motor de euros para vuestros socios</span>
+            <span className="rounded-full border border-secondary/35 bg-secondary/10 px-4 py-1.5 font-label-caps text-secondary">A vuestra medida</span>
+            <span className="rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm text-body-soft">Pedís el informe, nosotros lo dejamos listo</span>
           </div>
           <h1 className="font-h1 mb-6 px-2 text-4xl leading-[1.08] tracking-tight md:px-0 md:text-6xl lg:text-7xl" data-motion data-motion-delay="100">
-            <span className="method-gradient-headline">Más dinero para vuestros socios.</span>
+            <span className="method-gradient-headline">Pedís, nosotros lo generamos.</span>
             <br />
-            <span className="text-white">Cero postureo tecnológico.</span>
+            <span className="text-white">Del encargo al entregable listo para vuestros socios, sin fricción.</span>
           </h1>
           <p className="font-body-lg mx-auto mb-4 max-w-2xl text-lg leading-relaxed text-body-soft md:text-xl" data-motion data-motion-delay="140">
             {SUBVENIA_PITCH_20S}
@@ -818,7 +818,7 @@ export function ContactPage() {
               CANALES
             </span>
             <h2 className="font-h2 mb-4 text-h2 text-white">
-              Sin postureo: <span className="ms-kinetic-text">motor de €</span> para vuestra red
+              Hecho para que cobréis: <span className="ms-kinetic-text">motor de €</span> para vuestra red
             </h2>
             <p className="font-body-lg mb-8 text-body-soft">
               Cuántos socios en base, cómo cobráis hoy y si queréis masivo, premium o reporting político: en una llamada os decimos si el encaje es brutal o si aún no toca.
