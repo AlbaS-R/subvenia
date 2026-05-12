@@ -35,7 +35,8 @@ const SUBVENIA_ONE_LINER =
 const SUBVENIA_PITCH_20S =
   'Hoy vuestros socios pierden ayudas porque nadie las cruza con su realidad. Subvenia convierte vuestra base de datos en un motor que detecta y activa financiación para cada empresa —sin equipo técnico interno y con impacto en euros.';
 
-const SUBVENIA_CTA_DEMO = 'Demo con números';
+const SUBVENIA_CTA_DEMO = 'Demo';
+const SUBVENIA_DEMO_APP_URL = import.meta.env.VITE_SUBVENIA_DEMO_APP_URL || 'http://localhost:3000/';
 
 /** Decoración de hero alineada con la página Metodología (blobs, halo, rejilla). */
 function MethodologyHeroDecorations() {
@@ -201,13 +202,13 @@ function Layout() {
           </NavLink>
           </div>
         </div>
-        <NavLink
+        <a
           className="z-10 rounded-xl bg-[#57e8cd] px-3 py-1.5 text-sm font-semibold text-[#00382e] transition-transform active:scale-95 md:px-6 md:py-2 md:text-base md:font-medium"
           onClick={() => trackEvent('cta_click', {cta_id: 'navbar_demo', location: 'navbar'})}
-          to="/contacto"
+          href={SUBVENIA_DEMO_APP_URL}
         >
           {SUBVENIA_CTA_DEMO}
-        </NavLink>
+        </a>
       </nav>
       <main className="relative z-10 flex-1">
         <Outlet />
@@ -254,9 +255,6 @@ export function HomePage() {
             <span className="rounded-full border border-secondary/35 bg-secondary/10 px-4 py-1.5 font-label-caps text-secondary">No es un buscador</span>
             <span className="rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm text-body-soft">Es un motor de euros para vuestros socios</span>
           </div>
-          <p className="mb-5 max-w-3xl px-2 text-lg font-semibold leading-snug text-secondary md:text-xl" data-motion data-motion-delay="80">
-            {SUBVENIA_ONE_LINER}
-          </p>
           <h1 className="font-h1 mb-6 px-2 text-4xl leading-[1.08] tracking-tight md:px-0 md:text-6xl lg:text-7xl" data-motion data-motion-delay="100">
             <span className="method-gradient-headline">Más dinero para vuestros socios.</span>
             <br />
@@ -798,7 +796,6 @@ export function ContactPage() {
       <section className="relative overflow-hidden px-4 pt-28 pb-12 md:px-8 md:pt-36 md:pb-16" data-motion data-motion-delay="80" id="contacto">
         <MethodologyHeroDecorations />
         <div className="relative z-10 mx-auto max-w-5xl pb-10 text-center" data-motion data-motion-delay="100">
-          <p className="mb-4 max-w-3xl text-center text-sm font-semibold text-secondary md:text-base">{SUBVENIA_ONE_LINER}</p>
           <div className="mb-6 inline-flex flex-wrap items-center justify-center gap-2">
             <span className="rounded-full border border-secondary/35 bg-secondary/10 px-4 py-1.5 font-label-caps text-secondary">Contacto</span>
             <span className="rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm text-body-soft">Respuesta en menos de 24 h</span>
@@ -888,7 +885,7 @@ export function ContactPage() {
                 onClick={() => trackEvent('cta_click', {cta_id: 'contact_form_submit', location: 'contact_form'})}
                 type="submit"
               >
-                {isSubmitting ? 'Enviando...' : 'Pedir demo (con números)'}
+                {isSubmitting ? 'Enviando...' : 'Pedir demo'}
                 <span className="material-symbols-outlined text-lg">arrow_forward</span>
               </button>
             </form>
@@ -946,9 +943,6 @@ export function MethodologyPage() {
         <MethodologyHeroDecorations />
 
         <div className="relative z-10 mx-auto max-w-5xl text-center" data-motion data-motion-delay="40">
-          <p className="mb-5 max-w-3xl px-2 text-center text-base font-semibold leading-snug text-secondary md:text-lg">
-            {SUBVENIA_ONE_LINER}
-          </p>
           <div className="mb-6 inline-flex flex-wrap items-center justify-center gap-2">
             <span className="rounded-full border border-secondary/35 bg-secondary/10 px-4 py-1.5 font-label-caps text-secondary">Metodología en 5 fases</span>
             <span className="rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm text-body-soft">Base → cruce → informe → activación</span>
@@ -1025,7 +1019,7 @@ export function MethodologyPage() {
               {steps.map((step, index) => {
                 const isLeft = index % 2 === 0;
                 return (
-                  <li className="relative pb-10 last:pb-0 md:pb-14" key={step.title}>
+                  <li className="method-timeline-step relative pb-10 last:pb-0 md:pb-14" key={step.title}>
                     <div className="relative grid grid-cols-[2.75rem_1fr] items-start gap-x-3 md:grid-cols-[1fr_4rem_1fr] md:gap-x-6">
                       <div
                         className={`relative z-10 row-start-1 flex justify-center pt-0.5 md:pt-1 ${
@@ -1175,9 +1169,6 @@ export function CasosDeUsoPage() {
             <span className="rounded-full border border-secondary/35 bg-secondary/10 px-4 py-1.5 font-label-caps text-secondary">Casos de uso</span>
             <span className="rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm text-body-soft">Playbook comercial incluido</span>
           </div>
-          <p className="mb-4 max-w-3xl text-center text-sm font-semibold uppercase tracking-wide text-secondary md:text-base">
-            {SUBVENIA_ONE_LINER}
-          </p>
           <h1 className="font-h1 mb-6 px-2 text-4xl leading-[1.08] tracking-tight md:px-0 md:text-6xl lg:text-7xl">
             <span className="method-gradient-headline">Cuatro formas</span>
             <br />
@@ -1353,7 +1344,6 @@ export function PricingPage() {
       <section className="relative flex min-h-[68vh] flex-col justify-center overflow-hidden px-4 pt-28 pb-12 md:min-h-[72vh] md:px-8 md:pt-36 md:pb-16" data-motion data-motion-delay="70">
         <MethodologyHeroDecorations />
         <div className="relative z-10 mx-auto max-w-5xl text-center" data-motion="scale" data-motion-delay="110">
-          <p className="mb-4 max-w-3xl text-center text-sm font-semibold text-secondary md:text-base">{SUBVENIA_ONE_LINER}</p>
           <div className="mb-6 inline-flex flex-wrap items-center justify-center gap-2">
             <span className="rounded-full border border-secondary/35 bg-secondary/10 px-4 py-1.5 font-label-caps text-secondary">Licencias por volumen</span>
             <span className="rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-sm text-body-soft">50 o 5.000 socios — mismo motor</span>

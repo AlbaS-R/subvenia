@@ -19,6 +19,8 @@
   --color-primary: #c9d6ee;
   --color-on-primary: #21314a;
   --color-secondary: #44edcc;
+  /* Menta más luminosa para .font-label-caps sobre fondos oscuros (mantiene #44edcc en CTAs/rellenos) */
+  --color-secondary-label: #b4fff0;
   --color-on-secondary: #00382e;
   /* Texto secundario sobre fondos oscuros: menta muy suave, lee bien y enlaza con la marca */
   --color-body-soft: #bfe9df;
@@ -808,5 +810,15 @@ button:hover {
     opacity: 1 !important;
     filter: none !important;
   }
+}
+
+/* Kickers y pills con font-label-caps + text-secondary: más contraste que el acento base (#44edcc) */
+.font-label-caps[class*="text-secondary"] {
+  color: var(--color-secondary-label);
+}
+
+/* Línea de tiempo (icono, chip, número y “Fase X de Y”): mismo acento más luminoso sobre la tarjeta oscura */
+.method-timeline-step [class*="text-secondary"] {
+  color: var(--color-secondary-label);
 }
 
