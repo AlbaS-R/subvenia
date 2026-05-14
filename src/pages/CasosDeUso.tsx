@@ -1,13 +1,15 @@
 import React from 'react';
-import { motion } from 'motion/react';
-import { ArrowRight, Building2, Briefcase, BarChart3, Users, CheckCircle, Globe, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Building2, Briefcase, Users, CheckCircle, ShieldCheck } from 'lucide-react';
+import { BentoCard } from '../components/BentoCard';
+import { MotionReveal } from '../components/MotionReveal';
+import { subvenia_translations } from '../lib/subvenia_translations';
 
 interface CasosDeUsoProps {
-  t: any;
   onContact: () => void;
 }
 
-export const CasosDeUso: React.FC<CasosDeUsoProps> = ({ onContact }) => {
+export const CasosDeUsoPage: React.FC<CasosDeUsoProps> = ({ onContact }) => {
+  const t = subvenia_translations.ES;
   const page = {
     badge: 'Casos de uso reales',
     title: 'Cómo Subvenia genera valor económico en organizaciones empresariales',
@@ -61,145 +63,147 @@ export const CasosDeUso: React.FC<CasosDeUsoProps> = ({ onContact }) => {
   };
 
   return (
-    <div className="bg-background text-on-surface transition-colors duration-300 min-h-screen">
-      <section className="safe-padding pt-24 md:pt-28 pb-14 md:pb-18 relative overflow-hidden">
-        <div className="absolute -top-32 -right-24 w-80 h-80 rounded-full bg-tertiary-fixed/30 blur-3xl"></div>
-        <div className="absolute -bottom-32 -left-24 w-80 h-80 rounded-full bg-primary-fixed/40 blur-3xl"></div>
-        <div className="max-w-4xl mx-auto text-center relative">
-          <span className="inline-block px-4 py-1 rounded-full bg-tertiary-fixed text-on-tertiary-fixed-variant font-label-sm mb-6 uppercase">
-            {page.badge}
-          </span>
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="font-display-xl text-display-xl mb-6"
-          >
-            {page.title}
-          </motion.h1>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="font-body-lg text-body-lg text-on-surface-variant leading-relaxed"
-          >
-            {page.subtitle}
-          </motion.p>
+    <div className="method-page min-h-screen bg-transparent pt-24 text-white">
+      <section className="relative overflow-hidden px-4 py-20 text-center md:px-8 md:py-32">
+        <div aria-hidden className="pointer-events-none absolute -top-32 -right-24 h-80 w-80 rounded-full bg-secondary/10 blur-3xl"></div>
+        <div aria-hidden className="pointer-events-none absolute -bottom-32 -left-24 h-80 w-80 rounded-full bg-primary/10 blur-3xl"></div>
+        
+        <div className="relative z-10 mx-auto max-w-4xl">
+          <MotionReveal>
+            <span className="mb-6 inline-block rounded-full border border-secondary/30 bg-secondary/10 px-4 py-1 font-label-caps text-secondary uppercase">
+              {page.badge}
+            </span>
+            <h1 className="font-h1 mb-6 text-4xl md:text-6xl lg:text-7xl">
+              {page.title}
+            </h1>
+            <p className="font-body-lg mx-auto max-w-2xl text-lg leading-relaxed text-body-soft md:text-xl">
+              {page.subtitle}
+            </p>
+          </MotionReveal>
         </div>
       </section>
 
-      <section className="safe-padding pb-stack-lg">
-        <div className="bg-surface-container-low rounded-xl p-8 md:p-12 border border-primary/10">
-          <h2 className="font-headline-lg text-headline-lg mb-8 italic">¿Para quién está pensado?</h2>
-          <div className="grid md:grid-cols-3 gap-6">
+      <section className="relative px-4 py-16 md:px-8">
+        <div className="mx-auto max-w-7xl">
+          <MotionReveal className="mb-12">
+            <h2 className="text-3xl font-bold text-white md:text-4xl italic">¿Para quién está pensado?</h2>
+          </MotionReveal>
+          
+          <div className="bento-grid">
             {page.sectors.map((item, index) => {
               const Icon = item.icon;
               return (
-                <motion.div
-                  key={item.title}
-                  initial={{ opacity: 0, y: 15 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.08 }}
-                  className="bg-surface-container-lowest rounded-xl p-6 border border-primary/10"
+                <MotionReveal 
+                  key={item.title} 
+                  delay={index * 0.1} 
+                  direction="up"
+                  className="bento-item"
+                  style={{ '--bento-span': 4 } as React.CSSProperties}
                 >
-                  <Icon className="w-6 h-6 text-primary mb-4" />
-                  <h3 className="font-title-lg mb-2">{item.title}</h3>
-                  <p className="font-body-md text-on-surface-variant">{item.desc}</p>
-                </motion.div>
+                  <BentoCard innerClassName="items-center text-center">
+                    <Icon className="mb-6 h-10 w-10 text-secondary" />
+                    <h3 className="text-2xl font-bold text-white mb-3">{item.title}</h3>
+                    <p className="text-lg text-body-soft leading-relaxed">{item.desc}</p>
+                  </BentoCard>
+                </MotionReveal>
               );
             })}
           </div>
         </div>
       </section>
 
-      <section className="safe-padding pb-stack-lg">
-        <div className="grid lg:grid-cols-3 gap-6">
-          {page.cases.map((item, index) => (
-            <motion.article
-              key={item.profile}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.08 }}
-              className="bg-surface-container-lowest rounded-xl border border-primary/10 p-7"
-            >
-              <div className="text-xs font-bold uppercase tracking-widest text-primary mb-3">{item.profile}</div>
-              <div className="space-y-4">
-                <div>
-                  <div className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant mb-2">Situación</div>
-                  <p className="font-body-md text-on-surface-variant">{item.pain}</p>
-                </div>
-                <div>
-                  <div className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant mb-2">Cómo actúa Subvenia</div>
-                  <p className="font-body-md text-on-surface-variant">{item.solution}</p>
-                </div>
-                <div className="pt-3 border-t border-primary/10">
-                  <div className="text-[11px] font-bold uppercase tracking-widest text-on-surface-variant mb-2">Resultado</div>
-                  <p className="font-title-lg text-primary">{item.impact}</p>
-                </div>
-              </div>
-            </motion.article>
-          ))}
+      <section className="relative px-4 py-16 md:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="bento-grid">
+            {page.cases.map((item, index) => (
+              <MotionReveal 
+                key={item.profile} 
+                delay={index * 0.1} 
+                direction={index % 2 === 0 ? 'right' : 'left'}
+                className="bento-item"
+                style={{ '--bento-span': 4 } as React.CSSProperties}
+              >
+                <BentoCard>
+                  <div className="mb-6 inline-block rounded-lg bg-secondary/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-secondary">
+                    {item.profile}
+                  </div>
+                  <div className="space-y-6">
+                    <div>
+                      <div className="mb-2 text-[11px] font-black uppercase tracking-widest text-body-soft/60">Situación</div>
+                      <p className="text-base text-body-soft">{item.pain}</p>
+                    </div>
+                    <div>
+                      <div className="mb-2 text-[11px] font-black uppercase tracking-widest text-body-soft/60">Cómo actúa Subvenia</div>
+                      <p className="text-base text-body-soft">{item.solution}</p>
+                    </div>
+                    <div className="pt-4 border-t border-white/5">
+                      <div className="mb-2 text-[11px] font-black uppercase tracking-widest text-body-soft/60">Resultado</div>
+                      <p className="text-xl font-bold text-secondary leading-tight">{item.impact}</p>
+                    </div>
+                  </div>
+                </BentoCard>
+              </MotionReveal>
+            ))}
+          </div>
         </div>
       </section>
 
-      <section className="safe-padding pb-stack-lg">
-        <div className="grid md:grid-cols-3 gap-6">
-          {page.metrics.map((metric, index) => (
-            <div key={index} className="bg-surface-container-low rounded-xl p-8 border border-primary/10 text-center">
-              <div className="font-display-xl text-primary text-headline-lg mb-2">{metric.value}</div>
-              <p className="font-body-md text-on-surface-variant">{metric.label}</p>
-            </div>
-          ))}
+      <section className="relative px-4 py-16 md:px-8">
+        <div className="mx-auto max-w-7xl">
+          <div className="bento-grid">
+            {page.metrics.map((metric, index) => (
+              <MotionReveal 
+                key={index} 
+                delay={index * 0.1} 
+                direction="up"
+                className="bento-item"
+                style={{ '--bento-span': 4 } as React.CSSProperties}
+              >
+                <BentoCard innerClassName="items-center text-center justify-center py-4">
+                  <div className="mb-3 text-6xl font-black text-secondary tracking-tight">{metric.value}</div>
+                  <p className="text-lg font-medium text-body-soft">{metric.label}</p>
+                </BentoCard>
+              </MotionReveal>
+            ))}
+          </div>
         </div>
       </section>
 
-      <section className="safe-padding pb-stack-lg">
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.98 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          className="relative bg-on-secondary-fixed rounded-xl p-10 md:p-14 overflow-hidden shadow-2xl shadow-primary/20"
-        >
-          <div className="absolute top-0 right-0 p-8 opacity-10 hidden md:block">
-            <BarChart3 className="w-56 h-56 text-white" />
-          </div>
-          <div className="absolute -bottom-10 -left-10 p-8 opacity-10 hidden md:block">
-            <Globe className="w-44 h-44 text-white" />
-          </div>
-
-          <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 md:gap-16">
-            <div className="w-16 h-16 md:w-20 md:h-20 bg-white/20 backdrop-blur-xl rounded-2xl flex items-center justify-center shrink-0">
-              <CheckCircle className="w-8 h-8 md:w-10 md:h-10 text-yellow-300" />
-            </div>
-            <div className="text-center md:text-left">
-              <p className="font-headline-md text-headline-md text-white leading-tight">
-                "{page.quote}"
-              </p>
-              <div className="mt-6 flex items-center gap-2 justify-center md:justify-start">
-                <ShieldCheck className="w-5 h-5 text-green-300" />
-                <span className="text-white/80 text-sm font-medium tracking-wide italic">Enfoque ejecutivo, resultados medibles y activación real.</span>
+      <section className="relative px-4 py-24 md:px-8">
+        <div className="mx-auto max-w-6xl">
+          <MotionReveal className="relative overflow-hidden rounded-[40px] border border-secondary/20 bg-gradient-to-br from-secondary/10 via-slate-900/40 to-slate-950/60 p-10 md:p-20 shadow-2xl backdrop-blur-2xl">
+            <div aria-hidden className="pointer-events-none absolute -right-20 -top-20 h-80 w-80 rounded-full bg-secondary/10 blur-3xl" />
+            <div aria-hidden className="pointer-events-none absolute -bottom-20 -left-20 h-80 w-80 rounded-full bg-primary/5 blur-3xl" />
+            
+            <div className="relative z-10 flex flex-col items-center gap-10 md:flex-row md:gap-20">
+              <div className="flex h-24 w-24 items-center justify-center rounded-3xl bg-secondary/10 border border-secondary/30 backdrop-blur-md shrink-0">
+                <CheckCircle className="h-12 w-12 text-secondary" />
+              </div>
+              <div className="text-center md:text-left">
+                <p className="text-2xl md:text-4xl font-bold text-white leading-tight mb-8">
+                  "{page.quote}"
+                </p>
+                <div className="flex items-center justify-center gap-3 md:justify-start">
+                  <ShieldCheck className="h-6 w-6 text-emerald-400" />
+                  <span className="text-lg font-medium italic text-body-soft">Enfoque ejecutivo, resultados medibles y activación real.</span>
+                </div>
               </div>
             </div>
-          </div>
-        </motion.div>
+          </MotionReveal>
+        </div>
       </section>
 
-      <section className="safe-padding pb-24 text-center">
-        <motion.div
-           initial={{ opacity: 0, y: 20 }}
-           whileInView={{ opacity: 1, y: 0 }}
-           viewport={{ once: true }}
-        >
+      <section className="relative px-4 py-24 text-center">
+        <MotionReveal>
           <button 
             onClick={onContact}
-            className="group relative bg-primary text-on-primary px-10 py-5 rounded-full font-title-lg transition-all shadow-xl hover:shadow-2xl hover:scale-105 active:scale-95 flex items-center gap-3 mx-auto overflow-hidden"
+            className="group relative inline-flex items-center gap-4 rounded-full bg-secondary px-12 py-5 text-xl font-bold text-on-secondary shadow-[0_0_40px_rgba(68,237,204,0.3)] transition-all hover:scale-105 active:scale-95 overflow-hidden"
           >
-            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
+            <div aria-hidden className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
             {page.cta}
-            <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
+            <ArrowRight className="h-6 w-6 transition-transform group-hover:translate-x-2" />
           </button>
-        </motion.div>
+        </MotionReveal>
       </section>
     </div>
   );
