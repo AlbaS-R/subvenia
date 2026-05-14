@@ -227,6 +227,34 @@ export const Methodology = ({
         </div>
       </section>
 
+      <section className="px-4 py-24 md:px-8">
+        <div className="mx-auto max-w-5xl">
+          <MotionReveal className="mb-16 text-center">
+            <h2 className="font-h2 mb-6 text-3xl text-white md:text-5xl">Vídeo Tutorial: Subvenia en acción</h2>
+            <p className="mx-auto max-w-2xl text-lg text-body-soft">
+              Descubre cómo orquestamos el flujo de ayudas y la detección de oportunidades en menos de 5 minutos. Una mirada profunda al motor que impulsa a vuestros socios.
+            </p>
+          </MotionReveal>
+
+          <MotionReveal delay={0.2} direction="up">
+            <div className="group relative aspect-video overflow-hidden rounded-[32px] border border-white/10 bg-[#0c121e] shadow-[0_0_50px_rgba(68,237,204,0.15)] transition-all duration-700 hover:border-secondary/30 hover:shadow-[0_0_80px_rgba(68,237,204,0.25)]">
+              {/* Ambient Glows */}
+              <div aria-hidden className="absolute -top-20 -left-20 h-64 w-64 rounded-full bg-secondary/5 blur-[100px] transition-opacity group-hover:opacity-100" />
+              <div aria-hidden className="absolute -bottom-20 -right-20 h-64 w-64 rounded-full bg-blue-500/5 blur-[100px] transition-opacity group-hover:opacity-100" />
+              
+              <video
+                controls
+                className="relative z-10 h-full w-full object-cover"
+                style={{ borderRadius: 'inherit' }}
+              >
+                <source src="/video/video-tutorial.mp4" type="video/mp4" />
+                Tu navegador no soporta el tag de video.
+              </video>
+            </div>
+          </MotionReveal>
+        </div>
+      </section>
+
       <section className="px-4 pb-24 md:px-8">
         <MotionReveal>
           <div className="relative mx-auto max-w-4xl overflow-hidden rounded-[28px] border border-secondary/25 bg-gradient-to-br from-secondary/15 via-[#0a1524] to-[#060a10] p-10 text-center md:p-14">
