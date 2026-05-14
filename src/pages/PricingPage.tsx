@@ -68,7 +68,7 @@ export function PricingPage({ onBookDemo }: { onBookDemo: () => void }) {
                   delay={i * 0.1} 
                   direction="up"
                   className="bento-item"
-                  style={{ '--bento-span': 3 } as React.CSSProperties}
+                  style={{ '--bento-span': 3 } as any}
                 >
                   <BentoCard innerClassName="items-center text-center gap-6">
                     <div className="w-20 h-20 rounded-3xl bg-secondary/10 border border-secondary/20 flex items-center justify-center text-secondary transition-all duration-500">
@@ -98,7 +98,7 @@ export function PricingPage({ onBookDemo }: { onBookDemo: () => void }) {
               delay={0.1} 
               direction="up" 
               className="bento-item h-full"
-              style={{ '--bento-span': 4 } as React.CSSProperties}
+              style={{ '--bento-span': 4 } as any}
             >
               <BentoCard className="flex flex-col h-full">
                 <div className="h-full flex flex-col p-4">
@@ -125,15 +125,16 @@ export function PricingPage({ onBookDemo }: { onBookDemo: () => void }) {
                 >
                   {tp.card1CTA} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
-              </MotionReveal>
-            </BentoCard>
+                </div>
+              </BentoCard>
+            </MotionReveal>
 
             {/* Professional */}
             <MotionReveal 
               delay={0.2} 
               direction="up" 
               className="bento-item h-full"
-              style={{ '--bento-span': 4 } as React.CSSProperties}
+              style={{ '--bento-span': 4 } as any}
             >
               <BentoCard overflowVisible={true} className="flex flex-col h-full border-secondary/40 bg-secondary/10 lg:scale-105 shadow-2xl shadow-secondary/20 relative z-20 transition-transform duration-500">
                 <div aria-hidden className="absolute -top-3.5 left-1/2 -translate-x-1/2 bg-[#44edcc] text-[#00382e] px-8 py-2 rounded-full text-[12px] font-black tracking-[0.25em] uppercase z-30 shadow-[0_0_35px_rgba(68,237,204,0.6)] border border-white/40 animate-pulse">
@@ -163,15 +164,16 @@ export function PricingPage({ onBookDemo }: { onBookDemo: () => void }) {
                 >
                   {tp.card2CTA} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
-              </MotionReveal>
-            </BentoCard>
+                </div>
+              </BentoCard>
+            </MotionReveal>
 
             {/* Enterprise */}
             <MotionReveal 
               delay={0.3} 
               direction="up" 
               className="bento-item h-full"
-              style={{ '--bento-span': 4 } as React.CSSProperties}
+              style={{ '--bento-span': 4 } as any}
             >
               <BentoCard className="flex flex-col h-full">
                 <div className="h-full flex flex-col p-4">
@@ -199,8 +201,9 @@ export function PricingPage({ onBookDemo }: { onBookDemo: () => void }) {
                 >
                   {tp.card3CTA} <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                 </button>
-              </MotionReveal>
-            </BentoCard>
+                </div>
+              </BentoCard>
+            </MotionReveal>
           </div>
         </div>
 
@@ -225,32 +228,34 @@ export function PricingPage({ onBookDemo }: { onBookDemo: () => void }) {
                   {category.items.map((faq, i) => {
                     const globalIndex = `${catIndex}-${i}`;
                     return (
-                      <BentoCard key={i} className="!p-0">
-                        <button
-                          onClick={() => setOpenFaq(openFaq === globalIndex ? null : globalIndex)}
-                          className="w-full px-6 py-5 text-left flex items-center justify-between gap-4 hover:bg-white/5 transition-colors"
-                        >
-                          <div className="flex items-center gap-3">
-                            <HelpCircle className="w-5 h-5 text-secondary shrink-0" />
-                            <span className="font-semibold text-white">{faq.q}</span>
-                          </div>
-                          {openFaq === globalIndex ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
-                        </button>
-                        <AnimatePresence>
-                          {openFaq === globalIndex && (
-                            <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: 'auto', opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              className="px-6 pb-6 pt-0 text-body-soft leading-relaxed border-t border-white/5"
-                            >
-                              <div className="mt-4 text-base">
-                                {faq.a}
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </BentoCard>
+                      <div key={i}>
+                        <BentoCard className="!p-0">
+                          <button
+                            onClick={() => setOpenFaq(openFaq === globalIndex ? null : globalIndex)}
+                            className="w-full px-6 py-5 text-left flex items-center justify-between gap-4 hover:bg-white/5 transition-colors"
+                          >
+                            <div className="flex items-center gap-3">
+                              <HelpCircle className="w-5 h-5 text-secondary shrink-0" />
+                              <span className="font-semibold text-white">{faq.q}</span>
+                            </div>
+                            {openFaq === globalIndex ? <ChevronUp className="w-5 h-5" /> : <ChevronDown className="w-5 h-5" />}
+                          </button>
+                          <AnimatePresence>
+                            {openFaq === globalIndex && (
+                              <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                className="px-6 pb-6 pt-0 text-body-soft leading-relaxed border-t border-white/5"
+                              >
+                                <div className="mt-4 text-base">
+                                  {faq.a}
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
+                        </BentoCard>
+                      </div>
                     );
                   })}
                 </div>

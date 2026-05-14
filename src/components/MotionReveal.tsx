@@ -1,5 +1,5 @@
 import { motion, useInView } from 'motion/react';
-import { useRef, type ReactNode } from 'react';
+import { useRef, type ReactNode, type CSSProperties } from 'react';
 
 interface MotionRevealProps {
   children: ReactNode;
@@ -7,6 +7,7 @@ interface MotionRevealProps {
   direction?: 'up' | 'down' | 'left' | 'right' | 'none';
   duration?: number;
   className?: string;
+  style?: CSSProperties;
 }
 
 export function MotionReveal({
@@ -15,6 +16,7 @@ export function MotionReveal({
   direction = 'up',
   duration = 0.8,
   className = '',
+  style,
 }: MotionRevealProps) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, amount: 0.2 });
@@ -48,6 +50,7 @@ export function MotionReveal({
       animate={isInView ? 'visible' : 'hidden'}
       variants={variants}
       className={className}
+      style={style}
     >
       {children}
     </motion.div>

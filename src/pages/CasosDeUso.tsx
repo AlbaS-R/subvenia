@@ -98,7 +98,7 @@ export const CasosDeUsoPage: React.FC<CasosDeUsoProps> = ({ onContact }) => {
                   delay={index * 0.1} 
                   direction="up"
                   className="bento-item"
-                  style={{ '--bento-span': 4 } as React.CSSProperties}
+                  style={{ '--bento-span': 4 } as any}
                 >
                   <BentoCard innerClassName="items-center text-center">
                     <Icon className="mb-6 h-10 w-10 text-secondary" />
@@ -121,7 +121,7 @@ export const CasosDeUsoPage: React.FC<CasosDeUsoProps> = ({ onContact }) => {
                 delay={index * 0.1} 
                 direction={index % 2 === 0 ? 'right' : 'left'}
                 className="bento-item"
-                style={{ '--bento-span': 4 } as React.CSSProperties}
+                style={{ '--bento-span': 4 } as any}
               >
                 <BentoCard>
                   <div className="mb-6 inline-block rounded-lg bg-secondary/10 px-3 py-1 text-xs font-bold uppercase tracking-widest text-secondary">
@@ -157,7 +157,7 @@ export const CasosDeUsoPage: React.FC<CasosDeUsoProps> = ({ onContact }) => {
                 delay={index * 0.1} 
                 direction="up"
                 className="bento-item"
-                style={{ '--bento-span': 4 } as React.CSSProperties}
+                style={{ '--bento-span': 4 } as any}
               >
                 <BentoCard innerClassName="items-center text-center justify-center py-4">
                   <div className="mb-3 text-6xl font-black text-secondary tracking-tight">{metric.value}</div>

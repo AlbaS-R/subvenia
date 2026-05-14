@@ -190,7 +190,7 @@ export const HomePage = ({
               key={item.title} 
               delay={index * 0.1} 
               className="bento-item h-full"
-              style={{ '--bento-span': 6 } as React.CSSProperties}
+              style={{ '--bento-span': 6 } as any}
             >
               <BentoCard className="group h-full">
                 <div className="flex items-start justify-between mb-8">
