@@ -6,6 +6,6 @@ export const SUBVENIA_PITCH_20S =
 
 export const SUBVENIA_CTA_DEMO = 'Demo';
 
-export const SUBVENIA_DEMO_APP_URL = import.meta.env.VITE_SUBVENIA_DEMO_APP_URL || 'http://localhost:3000/';
+export const SUBVENIA_DEMO_APP_URL = import.meta.env.VITE_SUBVENIA_DEMO_APP_URL || 'https://subvenia-demo.vercel.app/';
 
 export const LEGAL_UPDATED_LABEL = 'Mayo de 2026';

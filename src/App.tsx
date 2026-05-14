@@ -32,7 +32,7 @@ function trackEvent(eventName: string, params: Record<string, unknown> = {}) {
   }
 }
 
-const SUBVENIA_DEMO_APP_URL = import.meta.env.VITE_SUBVENIA_DEMO_APP_URL || 'http://localhost:3002/';
+const SUBVENIA_DEMO_APP_URL = import.meta.env.VITE_SUBVENIA_DEMO_APP_URL || 'https://subvenia-demo.vercel.app/';
 const SUBVENIA_CTA_DEMO = 'Demo';
 const SUBVENIA_ONE_LINER = 'Convertimos vuestra base de socios en oportunidades reales de financiación: automáticas, escalables y medibles.';
 const SUBVENIA_PITCH_20S = 'Hoy vuestros socios pierden ayudas porque nadie las cruza con su realidad. Subvenia convierte vuestra base de datos en un motor que detecta y activa financiación para cada empresa —sin equipo técnico interno y con impacto en euros.';

@@ -116,7 +116,7 @@ Crea un archivo **`.env.local`** en la raíz (no lo subas al repositorio). Puede
 | `VITE_EMAILJS_SERVICE_ID` | ID de servicio EmailJS. |
 | `VITE_EMAILJS_TEMPLATE_ID` | ID de plantilla EmailJS. |
 | `VITE_EMAILJS_PUBLIC_KEY` | Clave pública EmailJS (frontend). |
-| `VITE_SUBVENIA_DEMO_APP_URL` | URL del entorno demo enlazado desde la barra de navegación (por defecto en código: `http://localhost:3000/`). |
+| `VITE_SUBVENIA_DEMO_APP_URL` | URL del entorno demo enlazado desde la barra de navegación (por defecto en código: `https://subvenia-demo.vercel.app/`). |
 
 **Seguridad:** no commitees `.env.local` ni claves reales. Rota cualquier clave que haya quedado expuesta en historial.
 
